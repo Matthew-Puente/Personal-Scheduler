@@ -1,11 +1,13 @@
+package basePackage;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 
 public class Calendar {
 	
-	private static HashMap<Integer, HashMap<Integer,int[]>> calendar;
-	private static HashMap<Integer, String> months;
-	private static LinkedList<String> taskList;
+	private  static HashMap<Integer, HashMap<Integer,int[]>> calendar;
+	private  static HashMap<Integer, String> months;
+	private  static LinkedList<String> taskList;
 	
 	public Calendar()
 	{

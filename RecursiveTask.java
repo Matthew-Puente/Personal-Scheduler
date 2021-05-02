@@ -1,12 +1,12 @@
 package basePackage;
 
 public class RecursiveTask extends Task {
-private char frequency;
+private String frequency;
 private String name;
 private String type;
-private int endDate;
+private Date endDate;
 
-public RecursiveTask(char frequency,String name, String type, int startDate, int endDate, int startTime, int endTime)
+public RecursiveTask(String frequency,String name, String type, Date startDate, Date endDate, int startTime, int endTime)
 {
 	this.setFrequency(frequency);
 	this.setName(name);
@@ -17,11 +17,11 @@ public RecursiveTask(char frequency,String name, String type, int startDate, int
 	this.setEndDate(endDate);
 }
 
-public char getFrequency() {
+public String getFrequency() {
 	return frequency;
 }
 
-public void setFrequency(char frequency) {
+public void setFrequency(String frequency) {
 	this.frequency = frequency;
 }
 
@@ -41,11 +41,11 @@ public void setType(String type) {
 	this.type = type;
 }
 
-public int getEndDate() {
+public Date getEndDate() {
 	return endDate;
 }
 
-public void setEndDate(int endDate) {
-	this.endDate = endDate;
+public void setEndDate(Date endDate2) {
+	this.endDate = endDate2;
 }
 }

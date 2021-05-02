@@ -5,7 +5,7 @@ public class TransientTask extends Task {
 	private String name;
 	private String type;
 	
-	public TransientTask(int startDate, int startTime, int endTime, String name, String type)
+	public TransientTask(Date startDate, int startTime, int endTime, String name, String type)
 	{
 		this.setName(name);
 		this.setType(type);
