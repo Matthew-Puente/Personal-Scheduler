@@ -1,4 +1,3 @@
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -7,24 +6,15 @@ public class Calendar {
 	private static HashMap<Integer, HashMap<Integer,int[]>> calendar;
 	private static HashMap<Integer, String> months;
 	private static LinkedList<String> taskList;
-	private static GregorianCalendar cldr;
 	
 	public Calendar()
 	{
 		calendar = new HashMap<>();
 		months = new HashMap<>();
 		taskList = new LinkedList<>();
-		cldr = new GregorianCalendar(2021, 1, 1);
 		generateCalendar();
 	}
 	
-	public static void main(String[] args)
-	{
-		GregorianCalendar cldr= new GregorianCalendar(2021, 1, 1);
-		
-		System.out.println(cldr.isLeapYear(2021));
-	}
-
 	
 	/**
 	 * This method constructs the calendar data structure upon creation of a calendar object
@@ -58,32 +48,29 @@ public class Calendar {
 	}
 	
 	
-	//Returns true if no schedule conflict and task could be added and false if not.
-	private boolean addTask(Task currentTask)
+	//Returns array for specified day
+	public int[] getDay(Date date)
 	{
-		
-		taskList.add(currentTask.taskDescription);
-		
-		return true;
+		return calendar.get(date.getMonth()).get(date.getDay());
 	}
 	
-	//Returns true if task was successfully removed
-	private boolean removeTask(Task currentTask)
+	
+	//Updates the day array
+	public boolean updateDay(Date date, int[] arr)
 	{
-		
-		if(taskList.contains(currentTask.taskDescription))
+		if(calendar.containsKey(date.getMonth()) && calendar.get(date.getMonth()).containsKey(date.getDay()))
 		{
-			taskList.remove(taskList.indexOf(currentTask.taskDescription));
+			calendar.get(date.getMonth()).put(date.getDay(), arr);
 			return true;
 			
 		}
 		
-		return false;
-		
+		return false;	
 	}
 	
+		
 	//Prints all stored task
-	private void printAllTask()
+	public void printAllTask()
 	{
 		
 		for(int i=0; i<taskList.size(); i++)
