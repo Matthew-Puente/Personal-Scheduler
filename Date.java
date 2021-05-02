@@ -38,5 +38,9 @@ public class Date {
 		else 
 			return false;
 	}
+	public void printDate()
+	{
+		System.out.println(month+"/"+day);
+	}
 
 }

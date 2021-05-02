@@ -11,7 +11,8 @@ public class Scheduler {
 	}
 	public boolean createTransientTask(Date startDate, int startTime, int endTime,String name, String type)
 	{		// Implements a TransientTask
-		TransientTask task = new TransientTask(startDate,startTime,endTime,name,type);
+		Date tempStartDate = new Date(startDate.getMonth(),startDate.getDay());
+		TransientTask task = new TransientTask(tempStartDate,startTime,endTime,name,type);
 		boolean YN = verifyTask(task);
 		if(YN)
 		{
@@ -26,7 +27,6 @@ public class Scheduler {
 		int [] tempArr = calendar.getDay(task.getStartDate());
 		int startIndex = task.getStartTime()/15;
 		int endIndex = task.getEndTime()/15;
-		
 		for(int i = startIndex;i<endIndex;i++)
 		{
 			if(tempArr[i] != 0)
@@ -46,18 +46,28 @@ public class Scheduler {
 		{
 			tempArr[i]= 1;
 		}
+		/*System.out.println("Day after transient task added");
+		for(int i = 0; i <tempArr.length;i++)
+		{
+			System.out.print(tempArr[i]);
+		}
+		System.out.println();
+		*/
 		calendar.updateDay(task.getStartDate(), tempArr);
 		
 	}
 	public boolean createRecursiveTask(String frequency, String name, String type,Date startDate, int startTime, Date endDate, int endTime)
 	{ // Implements a RecursiveTask
-		RecursiveTask task = new RecursiveTask(frequency,name,type,startDate,endDate,startTime,endTime);
+		Date tempStartDate = new Date(startDate.getMonth(),startDate.getDay());
+		Date tempEndDate = new Date(endDate.getMonth(),endDate.getDay());
+		RecursiveTask task = new RecursiveTask(frequency,name,type,tempStartDate,tempEndDate,startTime,endTime);
 		int counter = 0;
 		if(verifyTask(task))
 		{
 			while(mostRecentRecursiveDates[counter]!=null)
 			{
 				TransientTask newTask = new TransientTask(mostRecentRecursiveDates[counter],task.getStartTime(),task.getEndTime(),task.getName(),task.getType());
+				System.out.println("The Date is:"+mostRecentRecursiveDates[counter].getMonth()+"/"+mostRecentRecursiveDates[counter].getDay());
 				addRecursiveTask(newTask);
 				counter++;
 			}
@@ -87,24 +97,56 @@ public class Scheduler {
 		int [] tempArr = calendar.getDay(task.getStartDate());
 		int startIndex = task.getStartTime()/15;
 		int endIndex = task.getEndTime()/15;
+		/*
+		System.out.println("Day before recursive task added");
+		for(int i = 0; i <tempArr.length;i++)
+		{
+			System.out.print(tempArr[i]);
+		}
+		System.out.println();
+		*/
 		for(int i = startIndex;i<endIndex;i++)
 		{
 			tempArr[i]= 2;
 		}
+		/*
+		System.out.println("Day after recursive Task Added");
+		for(int i = 0; i <tempArr.length;i++)
+		{
+			System.out.print(tempArr[i]);
+		}
+		System.out.println();
+		*/
 		calendar.updateDay(task.getStartDate(), tempArr);
 	}
 	public boolean removeTask(Date startdate, int startTime, int endTime)
 	{   // implements an AntiTask
-		AntiTask task = new AntiTask(startdate,startTime,endTime);
+		Date tempStartDate = new Date(startdate.getMonth(),startdate.getDay());
+		AntiTask task = new AntiTask(tempStartDate,startTime,endTime);
+		int [] tempArr = calendar.getDay(task.getStartDate());
 		if(verifyRecursiveTaskExists(task))
 		{
-			int [] tempArr = calendar.getDay(task.getStartDate());
+			/*
+			System.out.println("Day before recursive task removed");
+			for(int i = 0; i <tempArr.length;i++)
+			{
+				System.out.print(tempArr[i]);
+			}
+			System.out.println();
+			*/
 			int startIndex = task.getStartTime()/15;
 			int endIndex = task.getEndTime()/15;
 			for(int i = startIndex;i<endIndex;i++)
 			{
 				tempArr[i]= 0;
 			}
+			/*
+			System.out.println("Day after recursive task removed");
+			for(int i = 0; i <tempArr.length;i++)
+			{
+				System.out.print(tempArr[i]);
+			}
+			*/
 			calendar.updateDay(task.getStartDate(), tempArr);
 			return true;
 		}
@@ -114,13 +156,17 @@ public class Scheduler {
 		int [] tempArr = calendar.getDay(task.getStartDate());
 		int startIndex = task.getStartTime()/15;
 		int endIndex = task.getEndTime()/15;
-		
+		/*for(int i = 0; i <tempArr.length;i++)
+		{
+			System.out.print(tempArr[i]);
+		}
+		*/
 		for(int i = startIndex;i<endIndex;i++)
 		{
 			//System.out.print(tempArr[i]+" ");
 			if(tempArr[i] != 2)
 			{
-				//return false;
+				return false;
 			}
 		}
 		return true;
@@ -169,7 +215,7 @@ public class Scheduler {
 			if(frequency != 0) { // only worries about days when frequency is in weeks or days, not months
 				for(int i = currentDate.getDay();i<daysInMonth[startDate.getMonth()];i += frequency)
 				{
-					mostRecentRecursiveDates[counter] = currentDate;
+					mostRecentRecursiveDates[counter] = new Date(currentDate.getMonth(),currentDate.getDay());
 					counter++;
 					currentDate.setDay(currentDate.getDay()+frequency);
 				}
@@ -181,10 +227,10 @@ public class Scheduler {
 				{
 					currentDate.setDay(daysInMonth[(currentDate.getMonth()+1)]);
 				}
-				mostRecentRecursiveDates[counter] = currentDate;
+				mostRecentRecursiveDates[counter] = new Date(currentDate.getMonth(),currentDate.getDay());
 				counter++;
 			}
-			currentDate.setMonth(currentDate.getMonth()+1); // increments month by 1
+			currentDate.setMonth(currentDate.getMonth()+1);// increments month by 1
 			if(currentDate.getMonth() >endDate.getMonth()||currentDate.getMonth() == endDate.getMonth() && currentDate.getDay()>endDate.getDay())
 			{
 				break;
@@ -194,7 +240,18 @@ public class Scheduler {
 		{
 			mostRecentRecursiveDates[counter] = endDate;
 		}
+		for(int i = 0; i <mostRecentRecursiveDates.length;i++)
+		{
+			if(mostRecentRecursiveDates[i]!=null)
+				System.out.print(mostRecentRecursiveDates[i].getMonth()+ "/"+ mostRecentRecursiveDates[i].getDay()+" ");
+			else
+				System.out.print(" null");
+		}
 		return mostRecentRecursiveDates;
+	}
+	public void printDay(Date date)
+	{
+		calendar.printDay(date);
 	}
 
 }

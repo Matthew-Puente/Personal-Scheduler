@@ -69,7 +69,15 @@ public class Calendar {
 		
 		return false;	
 	}
-	
+	public void printDay(Date date)
+	{
+		int [] day = calendar.get(date.getMonth()).get(date.getDay());
+		for(int i = 0; i<day.length;i++)
+		{
+			System.out.print(day[i]);
+		}
+		System.out.println();
+	}
 		
 	//Prints all stored task
 	public void printAllTask()
