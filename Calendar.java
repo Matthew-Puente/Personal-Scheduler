@@ -1,19 +1,13 @@
-package basePackage;
-
 import java.util.HashMap;
-import java.util.LinkedList;
 
 public class Calendar {
 	
-	private  static HashMap<Integer, HashMap<Integer,int[]>> calendar;
-	private  static HashMap<Integer, String> months;
-	private  static LinkedList<String> taskList;
+	private static HashMap<Integer, HashMap<Integer,int[]>> calendar;
+	private static final int MONTHS = 12;
 	
 	public Calendar()
 	{
 		calendar = new HashMap<>();
-		months = new HashMap<>();
-		taskList = new LinkedList<>();
 		generateCalendar();
 	}
 	
@@ -23,15 +17,11 @@ public class Calendar {
 	 */
 	private static void generateCalendar()
 	{
-
-		String[] monthsArray = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 		
 		int[] daysInMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 	
-		for(int i=0; i< monthsArray.length; i++)
-		{
-			months.put(i+1, monthsArray[i]); //Fills HashMap with number and corresponding month
-			
+		for(int i=0; i< MONTHS; i++)
+		{			
 			calendar.put(i+1, new HashMap<Integer, int[]>()); // Fills HashMap with month numbers and HashMap signifying days.
 		}
 		
@@ -69,28 +59,6 @@ public class Calendar {
 		
 		return false;	
 	}
-	public void printDay(Date date)
-	{
-		int [] day = calendar.get(date.getMonth()).get(date.getDay());
-		for(int i = 0; i<day.length;i++)
-		{
-			System.out.print(day[i]);
-		}
-		System.out.println();
-	}
-		
-	//Prints all stored task
-	public void printAllTask()
-	{
-		
-		for(int i=0; i<taskList.size(); i++)
-		{
-			System.out.print(i+1 + ": " + taskList.get(i));
-		
-		}
-		
-	}
-	
 	
 }
 	
