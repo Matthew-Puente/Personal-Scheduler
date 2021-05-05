@@ -33,14 +33,20 @@ public String getRealTime(int time)
 	if(time/60 >12||time==720)
 	{	if(time == 720)
 			return"12:00 PM";
+		if(time == 1440)
+			return "12:00AM";
+		if(time>720 && time<=765)
+			return"12:"+time%60+"PM";
 		else if(time%60 == 0)
 			return (time/60)%12 +":"+ time%60 + "0PM";
 		return (time/60)%12 +":"+ time%60 + "PM";
 	}
 	else
 	{
-		if(time == 1440)
-			return "12:00AM";
+		if(time == 0)
+			return "12:00 AM";
+		if(time >0 && time <=45)
+			return "12:" + time%60+"AM";
 		if(time%60 == 0)
 			return (time/60)%12 +":"+ time%60 + "0AM";
 		return (time/60)%12 +":"+ time%60 + "AM";
