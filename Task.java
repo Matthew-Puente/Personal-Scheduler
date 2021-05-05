@@ -22,4 +22,28 @@ public int getEndTime() {
 public void setEndTime(int endTime) {
 	this.endTime = endTime;
 }
+public void print()
+{
+	String start = getRealTime(startTime);
+	String end = getRealTime(endTime);
+	System.out.println("On "+ startDate.getMonth()+"/"+startDate.getDay()+", you have an appointment from "+start+ " to "+end);
+}
+public String getRealTime(int time)
+{
+	if(time/60 >12||time==720)
+	{	if(time == 720)
+			return"12:00 PM";
+		else if(time%60 == 0)
+			return (time/60)%12 +":"+ time%60 + "0PM";
+		return (time/60)%12 +":"+ time%60 + "PM";
+	}
+	else
+	{
+		if(time == 1440)
+			return "12:00AM";
+		if(time%60 == 0)
+			return (time/60)%12 +":"+ time%60 + "0AM";
+		return (time/60)%12 +":"+ time%60 + "AM";
+	}
+}
 }

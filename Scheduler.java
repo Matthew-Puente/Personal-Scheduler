@@ -1,3 +1,5 @@
+package basePackage;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -18,14 +20,15 @@ public class Scheduler {
 	}
 	
 	
-	public boolean createTransientTask(Date startDate, int startTime, int endTime,String name, String type)
+	public boolean createTransientTask(TransientTask myTask)
 	{		// Implements a TransientTask
-		Date tempStartDate = new Date(startDate.getMonth(),startDate.getDay());
-		TransientTask task = new TransientTask(tempStartDate,startTime,endTime,name,type);
+		Date tempStartDate = new Date(myTask.getStartDate().getMonth(),myTask.getStartDate().getDay());
+		TransientTask task = new TransientTask(tempStartDate,myTask.getStartTime(),myTask.getEndTime(),myTask.getName(),myTask.getType());
 		boolean YN = verifyTask(task);
 		if(YN)
 		{
 			addTask(task);
+			transientTaskList.add(task);
 			return true;
 		}
 		else
@@ -67,11 +70,11 @@ public class Scheduler {
 		taskList.add(task);
 		
 	}
-	public boolean createRecursiveTask(String frequency, String name, String type,Date startDate, int startTime, Date endDate, int endTime)
+	public boolean createRecursiveTask(RecursiveTask myTask)
 	{ // Implements a RecursiveTask
-		Date tempStartDate = new Date(startDate.getMonth(),startDate.getDay());
-		Date tempEndDate = new Date(endDate.getMonth(),endDate.getDay());
-		RecursiveTask task = new RecursiveTask(frequency,name,type,tempStartDate,tempEndDate,startTime,endTime);
+		Date tempStartDate = new Date(myTask.getStartDate().getMonth(),myTask.getStartDate().getDay());
+		Date tempEndDate = new Date(myTask.getEndDate().getMonth(),myTask.getEndDate().getDay());
+		RecursiveTask task = new RecursiveTask(myTask.getFrequency(),myTask.getName(),myTask.getType(),tempStartDate,tempEndDate,myTask.getStartTime(),myTask.getEndTime());
 		int counter = 0;
 		if(verifyTask(task))
 		{
@@ -80,7 +83,7 @@ public class Scheduler {
 			while(mostRecentRecursiveDates[counter]!=null)
 			{
 				TransientTask newTask = new TransientTask(mostRecentRecursiveDates[counter],task.getStartTime(),task.getEndTime(),task.getName(),task.getType());
-				System.out.println("The Date is:"+mostRecentRecursiveDates[counter].getMonth()+"/"+mostRecentRecursiveDates[counter].getDay());
+				//System.out.println("The Date is:"+mostRecentRecursiveDates[counter].getMonth()+"/"+mostRecentRecursiveDates[counter].getDay());
 				addRecursiveTask(newTask);
 				counter++;
 			}
@@ -135,10 +138,10 @@ public class Scheduler {
 		transientTaskList.add(task);
 	}
 	
-	public boolean removeTask(Date startdate, int startTime, int endTime)
+	public boolean removeTask(AntiTask myTask)
 	{   // implements an AntiTask
-		Date tempStartDate = new Date(startdate.getMonth(),startdate.getDay());
-		AntiTask task = new AntiTask(tempStartDate,startTime,endTime);
+		Date tempStartDate = new Date(myTask.getStartDate().getMonth(),myTask.getStartDate().getDay());
+		AntiTask task = new AntiTask(tempStartDate,myTask.getStartTime(),myTask.getEndTime());
 		int [] tempArr = calendar.getDay(task.getStartDate());
 		if(verifyRecursiveTaskExists(task))
 		{
@@ -165,6 +168,14 @@ public class Scheduler {
 			*/
 			calendar.updateDay(task.getStartDate(), tempArr);			
 			taskList.add(task);
+			for(int i =0;i<transientTaskList.size();i++)
+			{
+				if(transientTaskList.get(i).getStartDate().equals(task.getStartDate())&&transientTaskList.get(i).getStartTime() == task.getStartTime()&& transientTaskList.get(i).getEndTime() == task.getEndTime())
+				{
+					transientTaskList.remove(i);
+					break;
+				}
+			}
 			
 			return true;
 		}
@@ -257,13 +268,14 @@ public class Scheduler {
 		{
 			mostRecentRecursiveDates[counter] = endDate;
 		}
-		for(int i = 0; i <mostRecentRecursiveDates.length;i++)
+		/*for(int i = 0; i <mostRecentRecursiveDates.length;i++)
 		{
 			if(mostRecentRecursiveDates[i]!=null)
 				System.out.print(mostRecentRecursiveDates[i].getMonth()+ "/"+ mostRecentRecursiveDates[i].getDay()+" ");
 			else
 				System.out.print(" null");
 		}
+		*/
 		return mostRecentRecursiveDates;
 	}
 	

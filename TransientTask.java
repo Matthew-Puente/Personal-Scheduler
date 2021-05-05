@@ -29,4 +29,10 @@ public class TransientTask extends Task {
 	public void setType(String type) {
 		this.type = type;
 	}
+	public void print()
+	{
+		String start = getRealTime(getStartTime());
+		String end = getRealTime(getEndTime());
+		System.out.println("On "+ getStartDate().getMonth()+"/"+getStartDate().getDay()+", you have a "+ type + " appointment called " + name +" from "+start+ " to "+end);
+	}
 }
