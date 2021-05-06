@@ -68,7 +68,7 @@ public class Driver
 					break;
 
 				case '5':
-					choice = 'q';
+					// close file
 
 					break;
 
