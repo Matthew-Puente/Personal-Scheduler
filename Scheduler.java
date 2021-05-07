@@ -287,6 +287,10 @@ public class Scheduler {
 		for(Task task : transientTaskList)
 			task.print();
 	}
+	public LinkedList<Task> getLinkedList()
+	{
+		return taskList;
+	}
 	
 }
 
@@ -312,6 +316,7 @@ class SortByDate implements Comparator<Task>
 		
 		return a.getStartDate().getMonth() - b.getStartDate().getMonth();
 	}
+
 	
 }
 
