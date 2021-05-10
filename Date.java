@@ -38,6 +38,15 @@ public class Date {
 		else 
 			return false;
 	}
+	public boolean isAfter(Date comparedDate)
+	{
+		if((day>comparedDate.getDay() && month== comparedDate.getMonth())|| month>comparedDate.getMonth())
+		{
+			return true;
+		}
+		else
+			return false;
+	}
 	public void printDate()
 	{
 		System.out.println(month+"/"+day);
