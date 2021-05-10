@@ -13,8 +13,10 @@ public class Driver
 
 		Scanner scanner = new Scanner(System.in);
 
+		// boolean for if a task is successfully created
 		boolean creationSuccessful = false;
 
+		// using java's Date class with the full path, different from our custom Date class
 		java.util.Date date;
 
 		String name, type, frequency;
@@ -124,7 +126,7 @@ public class Driver
 					tempStartDate.setMonth(Integer.parseInt(dateString.substring(0,2)));
 					tempStartDate.setDay(Integer.parseInt(dateString.substring(3,5)));
 
-					System.out.println("Enter the end date for a recursive task in the format: MM-dd-yyyy");
+					System.out.println("Enter the end date for the recursive task in the format: MM-dd-yyyy");
 					dateString = scanner.nextLine();
 
 					try
@@ -145,14 +147,19 @@ public class Driver
 					tempEndDate.setMonth(Integer.parseInt(dateString.substring(0,2)));
 					tempEndDate.setDay(Integer.parseInt(dateString.substring(3,5)));
 
-					System.out.println("Enter the frequency of the transient task (D for daily, W for weekly, M for monthly, CAPS SENSITIVE:");
+					System.out.println("Enter the frequency of the recursive task (D for daily, W for weekly, M for monthly) CAPS SENSITIVE:");
 					frequency = scanner.nextLine();
 
-					System.out.println("Enter the name of the transient task:");
+					System.out.println("Enter the name of the recursive task:");
 					name = scanner.nextLine();
 
-					System.out.println("Enter the type of the transient task:");
+					System.out.println("Enter the type of the recursive task:");
 					type = scanner.nextLine();
+
+					System.out.println("tempStartDate.getMonth(): " + tempStartDate.getMonth());
+					System.out.println("tempStartDate.getDay(): " + tempStartDate.getDay());
+					System.out.println("tempEndDate.getMonth(): " + tempEndDate.getMonth());
+					System.out.println("tempEndDate.getDay(): " + tempEndDate.getDay());
 
 					RecursiveTask recursiveTask = new RecursiveTask(frequency, name, type, tempStartDate,tempEndDate, 360, 420);
 
@@ -191,7 +198,7 @@ public class Driver
 					dateToRemove.setMonth(Integer.parseInt(dateString.substring(0,2)));
 					dateToRemove.setDay(Integer.parseInt(dateString.substring(3,5)));
 
-					AntiTask antiTask = new AntiTask(dateToRemove,720,1080);
+					AntiTask antiTask = new AntiTask(dateToRemove,360,420);
 
 					creationSuccessful = scheduler.removeTask(antiTask);
 
