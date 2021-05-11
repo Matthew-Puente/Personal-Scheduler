@@ -1,10 +1,10 @@
-package basePackage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Writer;
 import java.util.LinkedList;
 import java.util.Scanner;
-import java.util.concurrent.RecursiveTask;
 import java.util.ArrayList;
 import java.io.FileReader;
 import org.json.simple.JSONObject;
@@ -21,7 +21,9 @@ public class FileHandler{
 
 
 
-	public ArrayList<Task> readFile(String filelocation){
+	public ArrayList<Task> readFile(String filelocation) throws FileNotFoundException, IOException, ParseException{
+		
+		
 		ArrayList<Task> tasksFromFile = new ArrayList<Task>();
 		/*
 		Object obj = parser.parse(new FileReader(filelocation));
@@ -66,10 +68,9 @@ public class FileHandler{
 				Integer endTime = Integer.valueOf(endTimeStr);
 
 				String frequencyStr = (String) newTaskJSON.get("frequency");
-				Integer frequency = Integer.valueOf(frequencyStr);
 				//finished casting to intended datatypes
 
-				RecursiveTask newTask = new RecursiveTask(taskName, taskType, startDate, startTime, endDate, frequency, endTime);
+				RecursiveTask newTask = new RecursiveTask(frequencyStr, taskName, taskType, startDate, endDate, startTime, endTime);
 				tasksFromFile.add(newTask);
 				//do things for recursive task
 			}
@@ -102,28 +103,24 @@ public class FileHandler{
 		}
 		return tasksFromFile;
 	}
-	public void writeFile(LinkedList listOfTasks, String filepath)
+	public void writeFile(LinkedList listOfTasks, String filepath) throws IOException
 	{
-		//JSON array to write to file "array"
-		JSONArray array = new JSONArray();
 		//'filepath' is the absolute filepath (like C:\documents\options.txt)
 
 
 		//incoming data is as a linked list. make sure to adhere to the pattern as written above
-		//create json object, put json array in json object then put json object in json array.
-		//get each object and make a json object in the array for each one
+		//delimiter is <,> with the arrow/less then/greater than signs
+		//recursive should be saved in this order:
+		//int startMonth, int startDay, int endMonth, int endDay, String frequency, String name, String type, int startTime, int endTime
 		Writer fileWriter = new FileWriter(filepath, true);
 		for (int i = 0; i < listOfTasks.size(); i++){
 			if(listOfTasks.get(i) instanceof RecursiveTask){
 				//do the shit
-				JSONObject taskToWrite = new JSONObject();
-				taskToWrite.put("Name", listOfTasks.get(i).getName());
-				taskToWrite.put("Type", listOfTasks.get(i).getType());
-				taskToWrite.put("Duration", listOfTasks.get(i).getDuration());
-
-
 			}
 			if(listOfTasks.get(i) instanceof TransientTask){
+
+			}
+			if(listOfTasks.get(i) instanceof AntiTask){
 
 			}
 
