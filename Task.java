@@ -30,7 +30,7 @@ public void print()
 }
 public String getRealTime(int time)
 {
-	if(time/60 >12||time==720)
+	if(time/60 >=12||time==720)
 	{	if(time == 720)
 			return"12:00 PM";
 		if(time == 1440)

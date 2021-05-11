@@ -229,14 +229,14 @@ public class Scheduler {
 		int estmNumOfDays = 0;
 		for(int i = startDate.getMonth();i<= endDate.getMonth();i++)
 		{
-			estmNumOfDays += daysInMonth[i]; // gets approx. # of days between start and end date
+			estmNumOfDays += daysInMonth[i-1]; // gets approx. # of days between start and end date
 			if(i == startDate.getMonth())
 			{
 				estmNumOfDays -= startDate.getDay();
 			}
 			if(i==endDate.getMonth())
 			{
-				estmNumOfDays-= daysInMonth[i]-endDate.getDay();
+				estmNumOfDays-= daysInMonth[i-1]-endDate.getDay();
 			}
 		}
 		if(frequency!= 0)
@@ -253,7 +253,7 @@ public class Scheduler {
 				{
 					if(currentDate.getMonth()<endDate.getMonth())
 					{
-						for(int i = currentDate.getDay();i<=daysInMonth[currentDate.getMonth()];i += frequency)
+						for(int i = currentDate.getDay();i<=daysInMonth[currentDate.getMonth()-1];i += frequency)
 						{
 							mostRecentRecursiveDates[counter] = new Date(currentDate.getMonth(),currentDate.getDay());
 							counter++;
@@ -280,14 +280,14 @@ public class Scheduler {
 				{
 					if(currentDate.getMonth()<endDate.getMonth())
 					{
-						for(int i = currentDate.getDay();i<=daysInMonth[currentDate.getMonth()];i += frequency)
+						for(int i = currentDate.getDay();i<=daysInMonth[currentDate.getMonth()-1];i += frequency)
 						{
 							mostRecentRecursiveDates[counter] = new Date(currentDate.getMonth(),currentDate.getDay());
 							counter++;
 							currentDate.setDay(currentDate.getDay()+frequency);
 						}
 						currentDate.setMonth(currentDate.getMonth()+1);//increments month by 1
-						currentDate.setDay(currentDate.getDay()% daysInMonth[currentDate.getMonth()]); // should get days into the next month;
+						currentDate.setDay(currentDate.getDay()% daysInMonth[currentDate.getMonth()-1]); // should get days into the next month;
 					}
 					else
 					{
@@ -305,9 +305,9 @@ public class Scheduler {
 		else {
 			while(!currentDate.equals(endDate)&& !currentDate.isAfter(endDate))
 			{
-				if(currentDate.getDay()>= daysInMonth[(currentDate.getMonth()+1)]) // if the day we have doesn't exist in the next month
+				if(currentDate.getDay()>= daysInMonth[(currentDate.getMonth())]) // if the day we have doesn't exist in the next month
 				{
-					currentDate.setDay(daysInMonth[(currentDate.getMonth()+1)]);
+					currentDate.setDay(daysInMonth[(currentDate.getMonth())]);
 				}
 				mostRecentRecursiveDates[counter] = new Date(currentDate.getMonth(),currentDate.getDay());
 				counter++;
