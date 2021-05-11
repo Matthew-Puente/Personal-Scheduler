@@ -104,22 +104,26 @@ public class FileHandler{
 	}
 	public void writeFile(LinkedList listOfTasks, String filepath)
 	{
+		//JSON array to write to file "array"
+		JSONArray array = new JSONArray();
 		//'filepath' is the absolute filepath (like C:\documents\options.txt)
 
 
 		//incoming data is as a linked list. make sure to adhere to the pattern as written above
-		//delimiter is <,> with the arrow/less then/greater than signs
-		//recursive should be saved in this order:
-		//int startMonth, int startDay, int endMonth, int endDay, String frequency, String name, String type, int startTime, int endTime
+		//create json object, put json array in json object then put json object in json array.
+		//get each object and make a json object in the array for each one
 		Writer fileWriter = new FileWriter(filepath, true);
 		for (int i = 0; i < listOfTasks.size(); i++){
 			if(listOfTasks.get(i) instanceof RecursiveTask){
 				//do the shit
-			}
-			if(listOfTasks.get(i) instanceof TransientTask){
+				JSONObject taskToWrite = new JSONObject();
+				taskToWrite.put("Name", listOfTasks.get(i).getName());
+				taskToWrite.put("Type", listOfTasks.get(i).getType());
+				taskToWrite.put("Duration", listOfTasks.get(i).getDuration());
+
 
 			}
-			if(listOfTasks.get(i) instanceof AntiTask){
+			if(listOfTasks.get(i) instanceof TransientTask){
 
 			}
 
