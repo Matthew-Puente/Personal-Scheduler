@@ -1,5 +1,3 @@
-package basePackage;
-
 import java.util.HashMap;
 
 public class Calendar {
@@ -47,8 +45,29 @@ public class Calendar {
 		int month = date.getMonth();
 		int year = date.getYear();
 		
-		if(PSS.containsKey(year) && PSS.get(year).containsKey(month) && PSS.get(year).get(month).containsKey(day))
-			return PSS.get(date.getYear()).get(date.getMonth()).get(date.getDay());
+		if(PSS.containsKey(year))
+		{
+			if(PSS.get(year).containsKey(month))
+			{
+				if(PSS.get(year).get(month).containsKey(day))
+				{
+					return PSS.get(year).get(month).get(day);
+
+				}
+				
+				else
+				{
+					PSS.get(year).get(month).put(day, new int[96]);
+					return PSS.get(year).get(month).get(day);
+				}
+			}
+			
+			else
+			{
+				PSS.get(year).put(month, new HashMap<>()).put(day, new int[96]);
+				return PSS.get(year).get(month).get(day);
+			}
+		}
 		
 		else
 		{	
@@ -57,10 +76,22 @@ public class Calendar {
 		}
 	}
 	
-	//Returns true if year is present;
+	//Returns true if year is present
 	public boolean containsYear(Date date)
 	{
 		return PSS.containsKey(date.getYear());
+	}
+	
+	//Returns true if month is present
+	public boolean containsMonth(Date date)
+	{
+		return PSS.get(date.getYear()).containsKey(date.getMonth());
+	}
+	
+	//Returns true if day is present
+	public boolean containsDay(Date date)
+	{
+		return PSS.get(date.getYear()).get(date.getMonth()).containsKey(date.getDay());
 	}
 	
 	
