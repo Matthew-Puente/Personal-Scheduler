@@ -104,24 +104,34 @@ public class Calendar {
 		
 		if(PSS.containsKey(year))
 		{
-			if(PSS.get(year).containsKey(month) && PSS.get(year).get(month).containsKey(day))
+			if(PSS.get(year).containsKey(month)) 
 			{
-				PSS.get(year).get(month).put(day, arr);
-				return true;
+				if(PSS.get(year).get(month).containsKey(day))
+				{
+					PSS.get(year).get(month).put(day, arr);
+					return true;
+				}
+				
+				else
+				{
+					PSS.get(year).get(month).put(day, arr);
+					return true;
+				}
 			}
 			
 			else
 			{
 				PSS.get(year).put(month, new HashMap<>()).put(day, arr);
-				
+				return true;
 			}
 		}
-		
+			
 		else if((year >= CURRENTYEAR) && (year < 3000))
 		{
 			PSS.put(year, new HashMap<>()).put(month, new HashMap<>()).put(day, arr);
 			return true;
 		}
+		
 		return false;	
 	}
 	
