@@ -25,14 +25,14 @@ public class Calendar {
 		// Initializes our PSS with a 2021 calendar
 		PSS.put(CURRENTYEAR, new HashMap<>());
 	
-		for(int currentMonth=1; currentMonth<= NUMBEROFMONTHS; currentMonth++)
+		for(int month=1; month<= NUMBEROFMONTHS; month++)
 		{			
 			// Fills the Year 2021 with 12 "months"
-			PSS.get(CURRENTYEAR).put(currentMonth, new HashMap<Integer, int[]>());
+			PSS.get(CURRENTYEAR).put(month, new HashMap<Integer, int[]>());
 			
-			for(int currentDay=1; currentDay<=daysInMonth[currentMonth-1]; currentDay++)
+			for(int day=1; day<=daysInMonth[month-1]; day++)
 			{
-				PSS.get(CURRENTYEAR).get(currentMonth).put(currentDay, new int[96]);
+				PSS.get(CURRENTYEAR).get(month).put(day, new int[96]);
 				
 			}
 		}	
