@@ -1,3 +1,5 @@
+package basePackage;
+
 
 
 public class Date {
@@ -6,10 +8,11 @@ public class Date {
 	private int month;
 	private int year;
 	
-	public Date(int month, int day)
+	public Date(int month, int day,int year)
 	{
 		this.month = month;
 		this.day = day;
+		this.year = year;
 	}
 	
 	public void setDay(int day)
@@ -46,7 +49,7 @@ public class Date {
 	
 	public boolean equals(Date comparedDate)
 	{
-		if(comparedDate.getDay() == day && comparedDate.getMonth() == month)
+		if(comparedDate.getDay() == day && comparedDate.getMonth() == month&& comparedDate.getYear() == year)
 		{
 			return true;
 		}
@@ -55,7 +58,7 @@ public class Date {
 	}
 	public boolean isAfter(Date comparedDate)
 	{
-		if((day>comparedDate.getDay() && month== comparedDate.getMonth())|| month>comparedDate.getMonth())
+		if((day>comparedDate.getDay() && month== comparedDate.getMonth()&& year == comparedDate.getYear())|| month>comparedDate.getMonth()&& year == comparedDate.getYear()||year>comparedDate.getYear())
 		{
 			return true;
 		}
@@ -64,7 +67,7 @@ public class Date {
 	}
 	public void printDate()
 	{
-		System.out.println(month+"/"+day);
+		System.out.println(month+"/"+day+ "/"+year);
 	}
 
 }

@@ -1,3 +1,5 @@
+package basePackage;
+
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -45,11 +47,11 @@ public class Driver
 			// open the users file
 		}
 
-		Date tempStartDate = new Date(01,01);
+		Date tempStartDate = new Date(01,01,2021);
 
-		Date tempEndDate = new Date(01,01);
+		Date tempEndDate = new Date(01,01,2021);
 
-		Date dateToRemove = new Date(01, 01);
+		Date dateToRemove = new Date(01, 01,2021);
 
 		while (choice != '5')
 		{
@@ -93,6 +95,7 @@ public class Driver
 					 */
 					tempStartDate.setMonth(Integer.parseInt(dateString.substring(0,2)));
 					tempStartDate.setDay(Integer.parseInt(dateString.substring(3,5)));
+					tempStartDate.setYear(Integer.parseInt(dateString.substring(6)));
 					// MUST INCLUDE 0 FOR SINGLE DIGIT HOURS e.g. 01:00 AM, 03:15 PM
 					System.out.println("Enter the start time of the transient task in format: hh:mm [AP]M e.g. 12:15 AM or 02:15 PM (INTERVALS OF 15 FOR MINUTES):");
 					startTimeString = scanner.nextLine();
@@ -156,7 +159,7 @@ public class Driver
 					 */
 					tempStartDate.setMonth(Integer.parseInt(dateString.substring(0,2)));
 					tempStartDate.setDay(Integer.parseInt(dateString.substring(3,5)));
-
+					tempStartDate.setYear(Integer.parseInt(dateString.substring(6)));
 					System.out.println("Enter the end date for the recursive task in the format: MM-dd-yyyy");
 					dateString = scanner.nextLine();
 
@@ -177,7 +180,7 @@ public class Driver
 					 */
 					tempEndDate.setMonth(Integer.parseInt(dateString.substring(0,2)));
 					tempEndDate.setDay(Integer.parseInt(dateString.substring(3,5)));
-
+					tempEndDate.setYear(Integer.parseInt(dateString.substring(6)));
 					System.out.println("Enter the start time of the recursive task in format: hh:mm [AP]M e.g. 12:15 AM or 02:15 PM (INTERVALS OF 15 FOR MINUTES):");
 					startTimeString = scanner.nextLine();
 					startTime = Integer.parseInt(startTimeString.substring(0,2)) % 12 * 60 + Integer.parseInt(startTimeString.substring(3,5));
@@ -242,7 +245,7 @@ public class Driver
 					 */
 					dateToRemove.setMonth(Integer.parseInt(dateString.substring(0,2)));
 					dateToRemove.setDay(Integer.parseInt(dateString.substring(3,5)));
-
+					dateToRemove.setYear(Integer.parseInt(dateString.substring(6)));
 					System.out.println("Enter the start time of the anti task in format: hh:mm [AP]M e.g. 12:15 AM or 02:15 PM (INTERVALS OF 15 FOR MINUTES):");
 					startTimeString = scanner.nextLine();
 					startTime = Integer.parseInt(startTimeString.substring(0,2)) % 12 * 60 + Integer.parseInt(startTimeString.substring(3,5));
