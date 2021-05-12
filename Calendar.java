@@ -38,12 +38,21 @@ public class Calendar {
 		}	
 	}
 		
-	
-	
-	//Returns array for specified day
+	//Returns array for specified day if day is not present a new array is generated
 	public int[] getDay(Date date)
 	{
-		return PSS.get(date.getYear()).get(date.getMonth()).get(date.getDay());
+		int day = date.getDay();
+		int month = date.getMonth();
+		int year = date.getYear();
+		
+		if(PSS.containsKey(year) && PSS.get(year).containsKey(month) && PSS.get(year).get(month).containsKey(day))
+			return PSS.get(date.getYear()).get(date.getMonth()).get(date.getDay());
+		
+		else
+		{	
+			PSS.put(year, new HashMap<>()).put(month, new HashMap<>()).put(day, new int[96]);
+			return PSS.get(year).get(month).get(day);
+		}
 	}
 	
 	//Returns true if year is present;
@@ -66,6 +75,11 @@ public class Calendar {
 			{
 				PSS.get(year).get(month).put(day, arr);
 				return true;
+			}
+			
+			else
+			{
+				PSS.get(year).put(month, new HashMap<>()).put(day, arr);
 				
 			}
 		}
@@ -75,8 +89,6 @@ public class Calendar {
 			PSS.put(year, new HashMap<>()).put(month, new HashMap<>()).put(day, arr);
 			return true;
 		}
-		
-		
 		return false;	
 	}
 	
