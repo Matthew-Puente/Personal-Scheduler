@@ -3,7 +3,8 @@ import java.util.HashMap;
 public class Calendar {
 	
 	private static HashMap<Integer, HashMap<Integer, HashMap<Integer,int[]>>> PSS;
-	private static final int MONTHS = 12;
+	private static final int NUMBEROFMONTHS = 12;
+	private static final int CURRENTYEAR = 2021;
 	
 	public Calendar()
 	{
@@ -22,16 +23,16 @@ public class Calendar {
 		
 		
 		// Initializes our PSS with a 2021 calendar
-		PSS.put(2021, new HashMap<>());
+		PSS.put(CURRENTYEAR, new HashMap<>());
 	
-		for(int i=0; i< MONTHS; i++)
+		for(int currentMonth=1; currentMonth<= NUMBEROFMONTHS; currentMonth++)
 		{			
 			// Fills the Year 2021 with 12 "months"
-			PSS.get(2021).put(i+1, new HashMap<Integer, int[]>());
+			PSS.get(CURRENTYEAR).put(currentMonth, new HashMap<Integer, int[]>());
 			
-			for(int j=1; j<=daysInMonth[i]; j++)
+			for(int currentDay=1; currentDay<=daysInMonth[currentMonth-1]; currentDay++)
 			{
-				PSS.get(2021).get(i+1).put((Integer)j, new int[96]);
+				PSS.get(CURRENTYEAR).get(currentMonth).put(currentDay, new int[96]);
 				
 			}
 		}	
@@ -55,15 +56,24 @@ public class Calendar {
 	//Updates the day array
 	public boolean updateDay(Date date, int[] arr)
 	{
-		if(PSS.containsKey(date.getYear()))
+		int day = date.getDay();
+		int month = date.getMonth();
+		int year = date.getYear();
+		
+		if(PSS.containsKey(year))
 		{
-			if(PSS.get(date.getYear()).containsKey(date.getMonth()) && PSS.get(date.getYear()).get(date.getMonth()).containsKey(date.getDay()))
+			if(PSS.get(year).containsKey(month) && PSS.get(year).get(month).containsKey(day))
 			{
-				PSS.get(date.getYear()).get(date.getMonth()).put(date.getDay(), arr);
+				PSS.get(year).get(month).put(day, arr);
 				return true;
 				
 			}
-			
+		}
+		
+		else if((year >= CURRENTYEAR) && (year < 3000))
+		{
+			PSS.put(year, new HashMap<>()).put(month, new HashMap<>()).put(day, arr);
+			return true;
 		}
 		
 		
