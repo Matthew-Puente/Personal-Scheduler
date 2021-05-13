@@ -316,13 +316,11 @@ public class Driver
 		// narrowed down to 2 cases, length will be 7 with a 2 digit day
 		if (trimmedDate.length() == 7)
 		{
-			System.out.println(trimmedDate.substring(0,2));
 			return Integer.parseInt(trimmedDate.substring(0,2));
 		}
 		// length will be 6 with a 1 digit day
 		else
 		{
-			System.out.println(trimmedDate.substring(0,1));
 			return Integer.parseInt(trimmedDate.substring(0,1));
 		}
 	}
