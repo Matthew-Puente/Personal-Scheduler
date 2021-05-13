@@ -1,6 +1,4 @@
-package basePackage;
-
-
+import java.util.Comparator;
 
 public class Date {
 	
@@ -49,25 +47,18 @@ public class Date {
 	
 	public boolean equals(Date comparedDate)
 	{
-		if(comparedDate.getDay() == day && comparedDate.getMonth() == month&& comparedDate.getYear() == year)
-		{
-			return true;
-		}
-		else 
-			return false;
+		return (comparedDate.getDay() == day) && (comparedDate.getMonth() == month) && (comparedDate.getYear() == year);
 	}
+	
 	public boolean isAfter(Date comparedDate)
 	{
-		if((day>comparedDate.getDay() && month== comparedDate.getMonth()&& year == comparedDate.getYear())|| month>comparedDate.getMonth()&& year == comparedDate.getYear()||year>comparedDate.getYear())
-		{
-			return true;
-		}
-		else
-			return false;
+		return (day>comparedDate.getDay()) && (month== comparedDate.getMonth()) && (year == comparedDate.getYear() || month>comparedDate.getMonth()) && (year == comparedDate.getYear() || year>comparedDate.getYear());
+	
 	}
 	public void printDate()
 	{
 		System.out.println(month+"/"+day+ "/"+year);
 	}
+	
 
 }
