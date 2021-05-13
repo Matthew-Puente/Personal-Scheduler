@@ -1,5 +1,3 @@
-package basePackage;
-
 import java.util.HashMap;
 
 public class Calendar {
@@ -66,14 +64,17 @@ public class Calendar {
 			
 			else
 			{
-				PSS.get(year).put(month, new HashMap<>()).put(day, new int[96]);
+				PSS.get(year).put(month, new HashMap<>());
+				PSS.get(year).get(month).put(day, new int[96]);
 				return PSS.get(year).get(month).get(day);
 			}
 		}
 		
 		else
 		{	
-			PSS.put(year, new HashMap<>()).put(month, new HashMap<>()).put(day, new int[96]);
+			PSS.put(year, new HashMap<>());
+			PSS.get(year).put(month, new HashMap<>());
+			PSS.get(year).get(month).put(day, new int[96]);
 			return PSS.get(year).get(month).get(day);
 		}
 	}
@@ -108,29 +109,24 @@ public class Calendar {
 		{
 			if(PSS.get(year).containsKey(month)) 
 			{
-				if(PSS.get(year).get(month).containsKey(day))
-				{
-					PSS.get(year).get(month).put(day, arr);
-					return true;
-				}
+				PSS.get(year).get(month).put(day, arr);
+				return true;
 				
-				else
-				{
-					PSS.get(year).get(month).put(day, arr);
-					return true;
-				}
 			}
 			
 			else
 			{
-				PSS.get(year).put(month, new HashMap<>()).put(day, arr);
+				PSS.get(year).put(month, new HashMap<>());
+				PSS.get(year).get(day).put(day, arr);
 				return true;
 			}
 		}
 			
 		else if((year >= CURRENTYEAR) && (year < 3000))
 		{
-			PSS.put(year, new HashMap<>()).put(month, new HashMap<>()).put(day, arr);
+			PSS.put(year, new HashMap<>());
+			PSS.get(year).put(month, new HashMap<>());
+			PSS.get(year).get(month).put(day, arr);
 			return true;
 		}
 		
