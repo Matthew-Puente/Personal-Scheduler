@@ -289,8 +289,6 @@ public class Driver
 		try
 		{
 			date = simpleDateFormat.parse(d);
-			if(date.getYear() < 1000 || date.getYear() > 9999)
-				return false;
 			return true;
 		}
 		catch(Exception e)
