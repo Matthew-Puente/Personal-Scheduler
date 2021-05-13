@@ -74,7 +74,8 @@ public class FileHandler{
 				tasksFromFile.add(newTask);
 				//do things for recursive task
 			}
-			else{
+			//detecting if the current task is a Transient Task
+			if(newTaskJSON.containsKey("Type")){
 				//do things for normal tasks
 
 				//again casting to datatypes
@@ -99,11 +100,34 @@ public class FileHandler{
 				tasksFromFile.add(newTask);
 
 			}
+			//detecting if the current task is an antitask
+			if(!newTaskJSON.containsKey("Type")){
+				//do things for normal tasks
 
+				//again casting to datatypes
+				String startDateStr = (String) newTaskJSON.get("StartDate");
+				Integer startYear = Integer.valueOf(startDateStr.substring(0,3));
+				Integer startMonth = Integer.valueOf(startDateStr.substring(4, 5));
+				Integer startDay = Integer.valueOf(startDateStr.substring(6,7));
+				Date startDate = new Date(startMonth,startDay);
+	
+				String startTimeStr = (String) newTaskJSON.get("startTime");
+				Integer startTime = Integer.valueOf(startTimeStr);
+
+				String endTimeStr = (String) newTaskJSON.get("endTime");
+				Integer endTime = Integer.valueOf(endTimeStr);
+
+				String taskName = (String) newTaskJSON.get("Name");
+				//end casting datatypes
+				
+				AntiTask newTask = new AntiTask(startDate, startTime, endTime, taskName);
+				tasksFromFile.add(newTask);
+
+			}
 		}
 		return tasksFromFile;
 	}
-	public void writeFile(LinkedList listOfTasks, String filepath) throws IOException
+	public void writeFile(ArrayList<Task> listOfTasks, String filepath) throws IOException
 	{
 		//'filepath' is the absolute filepath (like C:\documents\options.txt)
 
