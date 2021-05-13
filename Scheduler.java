@@ -3,12 +3,13 @@ package basePackage;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
-
+import java.util.PriorityQueue;
 public class Scheduler {
 	
 	private Calendar calendar;
 	private int[] daysInMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-	private Date[] mostRecentRecursiveDates;
+	private PriorityQueue<Date> mostRecentRecursiveDates = new PriorityQueue<>(new DateComparator());
+	private PriorityQueue<Date> datesToVerify = new PriorityQueue<>(new DateComparator());
 	private LinkedList<Task> taskList;
 	private LinkedList<Task> transientTaskList;
 	
@@ -75,17 +76,15 @@ public class Scheduler {
 		Date tempStartDate = new Date(myTask.getStartDate().getMonth(),myTask.getStartDate().getDay(),myTask.getStartDate().getYear());
 		Date tempEndDate = new Date(myTask.getEndDate().getMonth(),myTask.getEndDate().getDay(),myTask.getEndDate().getYear());
 		RecursiveTask task = new RecursiveTask(myTask.getFrequency(),myTask.getName(),myTask.getType(),tempStartDate,tempEndDate,myTask.getStartTime(),myTask.getEndTime());
-		int counter = 0;
 		if(verifyTask(task))
 		{
 			taskList.add(task);
 			
-			for(int i = 0; i<mostRecentRecursiveDates.length;i++)
+			for(int i = 0; i<mostRecentRecursiveDates.size();i++)
 			{
-				TransientTask newTask = new TransientTask(mostRecentRecursiveDates[counter],task.getStartTime(),task.getEndTime(),task.getName(),task.getType());
+				TransientTask newTask = new TransientTask(mostRecentRecursiveDates.poll(),task.getStartTime(),task.getEndTime(),task.getName(),task.getType());
 				//System.out.println("The Date is:"+mostRecentRecursiveDates[counter].getMonth()+"/"+mostRecentRecursiveDates[counter].getDay());
 				addRecursiveTask(newTask);
-				counter++;
 			}
 			return true;
 		}
@@ -95,11 +94,11 @@ public class Scheduler {
 	private boolean verifyTask(RecursiveTask task)
 	{
 		int frequency = getFrequency(task.getFrequency());
-		Date [] recursiveTask = calculateDates(frequency, task.getStartDate(),task.getEndDate());
-		for(int i = 0; i<recursiveTask.length;i++)
+		PriorityQueue<Date> recursiveTask = calculateDates(frequency, task.getStartDate(),task.getEndDate());
+		for(int i = 0; i<recursiveTask.size();i++)
 		{
 			//System.out.println("Hello");
-			TransientTask newTask = new TransientTask(recursiveTask[i],task.getStartTime(),task.getEndTime(),task.getName(),task.getType());
+			TransientTask newTask = new TransientTask(datesToVerify.poll(),task.getStartTime(),task.getEndTime(),task.getName(),task.getType());
 			boolean valid = verifyTask(newTask);
 			if(!valid)
 				return false;
@@ -224,28 +223,12 @@ public class Scheduler {
 			return -1;
 		}
 	}
-	private Date[] calculateDates(int frequency, Date startDate,Date endDate)
+	private PriorityQueue<Date> calculateDates(int frequency, Date startDate,Date endDate)
 	{
-		int estmNumOfDays = 0;
-		for(int i = startDate.getMonth();i<= endDate.getMonth();i++)
-		{
-			estmNumOfDays += daysInMonth[i-1]; // gets approx. # of days between start and end date
-			if(i == startDate.getMonth())
-			{
-				estmNumOfDays -= startDate.getDay();
-			}
-			if(i==endDate.getMonth())
-			{
-				estmNumOfDays-= daysInMonth[i-1]-endDate.getDay();
-			}
-		}
-		if(frequency!= 0)
-			 mostRecentRecursiveDates = new Date[(estmNumOfDays/frequency)+1];
-		else
-			mostRecentRecursiveDates = new Date[endDate.getMonth()-startDate.getMonth()+1];
 		Date currentDate = startDate;
-		int counter = 0;
 		//System.out.println("Hi");
+		mostRecentRecursiveDates = new PriorityQueue<>(new DateComparator());
+		datesToVerify = new PriorityQueue<>(new DateComparator());
 		if(frequency != 0) { // only worries about days when frequency is in weeks or days, not months
 			if(frequency == 1)
 			{
@@ -257,8 +240,8 @@ public class Scheduler {
 						{
 							for(int i = currentDate.getDay();i<=daysInMonth[currentDate.getMonth()-1];i += frequency)
 							{
-								mostRecentRecursiveDates[counter] = new Date(currentDate.getMonth(),currentDate.getDay(),currentDate.getYear());
-								counter++;
+								mostRecentRecursiveDates.add(new Date(currentDate.getMonth(),currentDate.getDay(),currentDate.getYear()));
+								datesToVerify.add(new Date(currentDate.getMonth(),currentDate.getDay(),currentDate.getYear()));
 								currentDate.setDay(currentDate.getDay()+frequency);
 							}
 							currentDate.setMonth(currentDate.getMonth()+1);//increments month by 1
@@ -268,8 +251,8 @@ public class Scheduler {
 						{
 							for(int i = currentDate.getDay();i<=endDate.getDay();i += frequency)
 							{
-								mostRecentRecursiveDates[counter] = new Date(currentDate.getMonth(),currentDate.getDay(),currentDate.getYear());
-								counter++;
+								mostRecentRecursiveDates.add(new Date(currentDate.getMonth(),currentDate.getDay(),currentDate.getYear()));
+								datesToVerify.add(new Date(currentDate.getMonth(),currentDate.getDay(),currentDate.getYear()));
 								currentDate.setDay(currentDate.getDay()+frequency);
 							}
 						}
@@ -280,8 +263,8 @@ public class Scheduler {
 						{
 							for(int i = currentDate.getDay();i<=daysInMonth[currentDate.getMonth()-1];i += frequency)
 							{
-								mostRecentRecursiveDates[counter] = new Date(currentDate.getMonth(),currentDate.getDay(),currentDate.getYear());
-								counter++;
+								mostRecentRecursiveDates.add(new Date(currentDate.getMonth(),currentDate.getDay(),currentDate.getYear()));
+								datesToVerify.add(new Date(currentDate.getMonth(),currentDate.getDay(),currentDate.getYear()));
 								currentDate.setDay(currentDate.getDay()+frequency);
 							}
 							currentDate.setMonth(currentDate.getMonth()+1);//increments month by 1
@@ -307,8 +290,8 @@ public class Scheduler {
 						{
 							for(int i = currentDate.getDay();i<=daysInMonth[currentDate.getMonth()-1];i += frequency)
 							{
-								mostRecentRecursiveDates[counter] = new Date(currentDate.getMonth(),currentDate.getDay(),currentDate.getYear());
-								counter++;
+								mostRecentRecursiveDates.add(new Date(currentDate.getMonth(),currentDate.getDay(),currentDate.getYear()));
+								datesToVerify.add(new Date(currentDate.getMonth(),currentDate.getDay(),currentDate.getYear()));
 								currentDate.setDay(currentDate.getDay()+frequency);
 							}
 							currentDate.setMonth(currentDate.getMonth()+1);//increments month by 1
@@ -318,8 +301,8 @@ public class Scheduler {
 						{
 							for(int i = currentDate.getDay();i<=endDate.getDay();i += frequency)
 							{
-								mostRecentRecursiveDates[counter] = new Date(currentDate.getMonth(),currentDate.getDay(),currentDate.getYear());
-								counter++;
+								mostRecentRecursiveDates.add(new Date(currentDate.getMonth(),currentDate.getDay(),currentDate.getYear()));
+								datesToVerify.add(new Date(currentDate.getMonth(),currentDate.getDay(),currentDate.getYear()));
 								currentDate.setDay(currentDate.getDay()+frequency);
 							}
 						}
@@ -330,8 +313,8 @@ public class Scheduler {
 						{
 							for(int i = currentDate.getDay();i<=daysInMonth[currentDate.getMonth()-1];i += frequency)
 							{
-								mostRecentRecursiveDates[counter] = new Date(currentDate.getMonth(),currentDate.getDay(),currentDate.getYear());
-								counter++;
+								mostRecentRecursiveDates.add(new Date(currentDate.getMonth(),currentDate.getDay(),currentDate.getYear()));
+								datesToVerify.add(new Date(currentDate.getMonth(),currentDate.getDay(),currentDate.getYear()));
 								currentDate.setDay(currentDate.getDay()+frequency);
 							}
 							currentDate.setMonth(currentDate.getMonth()+1);//increments month by 1
@@ -351,8 +334,8 @@ public class Scheduler {
 					{
 						currentDate.setDay(daysInMonth[(currentDate.getMonth()-1)]);
 					}
-					mostRecentRecursiveDates[counter] = new Date(currentDate.getMonth(),currentDate.getDay(),currentDate.getYear());
-					counter++;
+					mostRecentRecursiveDates.add(new Date(currentDate.getMonth(),currentDate.getDay(),currentDate.getYear()));
+					datesToVerify.add(new Date(currentDate.getMonth(),currentDate.getDay(),currentDate.getYear()));
 					currentDate.setMonth(currentDate.getMonth()+1);// increments month by 1
 					if(currentDate.getMonth() == 13)
 					{
@@ -364,7 +347,8 @@ public class Scheduler {
 		}
 		if(currentDate.equals(endDate)) // makes sure endDate is in the recursive dates since the while loop would leave before adding it if it fell on the exact date. 
 		{
-			mostRecentRecursiveDates[counter] = endDate;
+			mostRecentRecursiveDates.add(endDate);
+			datesToVerify.add(endDate);
 		}
 		/*for(int i = 0; i <mostRecentRecursiveDates.length;i++)
 		{
