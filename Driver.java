@@ -40,7 +40,6 @@ public class Driver
 		System.out.println("Would you like to import tasks from a file? (y/n)");
 		choice = scanner.next().charAt(0);
 		scanner.nextLine();
-
 		if (choice == 'y')
 		{
 			// open the users file
@@ -309,37 +308,33 @@ public class Driver
 
 	public int getDay(String d)
 	{
-		if (d.charAt(0) != '0')
+		// create a substring of the original date string starting at the index after first slash
+		int startIndex = d.indexOf("/") + 1;
+		// trim this string to only have dd/yyyy
+		String trimmedDate = d.substring(startIndex, d.length());
+
+		// narrowed down to 2 cases, length will be 7 with a 2 digit day
+		if (trimmedDate.length() == 7)
 		{
-			if (d.charAt(2) != '0' && d.charAt(3) == '/')
-			{
-				return Integer.parseInt(d.substring(2,3));
-			}
-			else
-			{
-				return Integer.parseInt(d.substring(2,4));
-			}
+			System.out.println(trimmedDate.substring(0,2));
+			return Integer.parseInt(trimmedDate.substring(0,2));
 		}
+		// length will be 6 with a 1 digit day
 		else
 		{
-			if (d.charAt(3) != '0' && d.charAt(4) == '/')
-			{
-				return Integer.parseInt(d.substring(3,4));
-			}
-			else
-			{
-				return Integer.parseInt(d.substring(3,5));
-			}
+			System.out.println(trimmedDate.substring(0,1));
+			return Integer.parseInt(trimmedDate.substring(0,1));
 		}
-
 	}
 
 	public int getMonth(String d)
 	{
-		if (d.charAt(0) != '0')
+		// 1/ 2/ 3/ 4/ 5/ 6/ 7/ 8/ 9/
+		if (d.charAt(0) != '0' && d.charAt(1) == '/')
 		{
 			return Integer.parseInt(d.substring(0,1));
 		}
+		// 01/ 02/ 03/ 04/ 05/ 06/ 07/ 08/ 09/ 10/ 11/ 12/
 		else
 		{
 			return Integer.parseInt(d.substring(0,2));
@@ -349,6 +344,7 @@ public class Driver
 
 	public int getYear(String d)
 	{
+		// only 3 cases after parsing date with dateIsValid()
 		if (d.length() == 10)
 		{
 			return Integer.parseInt(d.substring(6,10));
@@ -357,13 +353,9 @@ public class Driver
 		{
 			return Integer.parseInt(d.substring(5,9));
 		}
-		else if (d.length() == 8)
+		else // d.length() == 8
 		{
 			return Integer.parseInt(d.substring(4,8));
-		}
-		else
-		{
-			return Integer.parseInt(d.substring(6,10));
 		}
 
 	}
@@ -466,4 +458,3 @@ public class Driver
 	}
 
 }
-
