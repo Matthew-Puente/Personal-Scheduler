@@ -1,4 +1,6 @@
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
 import java.util.Scanner;
 import java.util.regex.*;
 
@@ -280,6 +282,7 @@ public class Driver
 
 	public boolean dateIsValid(String d)
 	{
+		java.util.Calendar calendar = new GregorianCalendar();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
 		simpleDateFormat.setLenient(false);
 
@@ -289,6 +292,13 @@ public class Driver
 		try
 		{
 			date = simpleDateFormat.parse(d);
+			calendar.setTime(date);
+			int year = calendar.get(java.util.Calendar.YEAR);
+			// keep years 4 digits
+			if (year < 1000 || year > 9999)
+			{
+				return false;
+			}
 			return true;
 		}
 		catch(Exception e)
