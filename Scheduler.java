@@ -1,3 +1,5 @@
+package basePackage;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -77,8 +79,8 @@ public class Scheduler {
 		if(verifyTask(task))
 		{
 			taskList.add(task);
-			
-			for(int i = 0; i<mostRecentRecursiveDates.size();i++)
+			int size = mostRecentRecursiveDates.size();
+			for(int i = 0; i<size;i++)
 			{
 				TransientTask newTask = new TransientTask(mostRecentRecursiveDates.poll(),task.getStartTime(),task.getEndTime(),task.getName(),task.getType());
 				//System.out.println("The Date is:"+mostRecentRecursiveDates[counter].getMonth()+"/"+mostRecentRecursiveDates[counter].getDay());
@@ -315,8 +317,9 @@ public class Scheduler {
 								datesToVerify.add(new Date(currentDate.getMonth(),currentDate.getDay(),currentDate.getYear()));
 								currentDate.setDay(currentDate.getDay()+frequency);
 							}
-							currentDate.setMonth(currentDate.getMonth()+1);//increments month by 1
 							currentDate.setDay(currentDate.getDay()% daysInMonth[currentDate.getMonth()-1]); // should get days into the next month;
+							currentDate.setMonth(currentDate.getMonth()+1);//increments month by 1
+	
 						}
 							currentDate.setYear(currentDate.getYear()+1);
 							currentDate.setMonth(1);
@@ -380,20 +383,24 @@ class SortByDate implements Comparator<Task>
 	
 	public int compare(Task a, Task b)
 	{
-		if(a.getStartDate().getMonth() == b.getStartDate().getMonth())
-		{
-			if(a.getStartDate().getDay() == b.getStartDate().getDay())
+		if(a.getStartDate().getYear() == b.getStartDate().getYear()) {
+			if(a.getStartDate().getMonth() == b.getStartDate().getMonth())
 			{
-				return 1;
+				if(a.getStartDate().getDay() == b.getStartDate().getDay())
+				{
+					return 1;
+				}
+				
+				else
+				{
+					return a.getStartDate().getDay() - b.getStartDate().getDay();
+				}
 			}
 			
-			else
-			{
-				return a.getStartDate().getDay() - b.getStartDate().getDay();
-			}
+			return a.getStartDate().getMonth() - b.getStartDate().getMonth();
 		}
-		
-		return a.getStartDate().getMonth() - b.getStartDate().getMonth();
+		else
+			return a.getStartDate().getYear() - b.getStartDate().getYear();
 	}
 
 	
