@@ -49,18 +49,10 @@ public class FileHandler{
 			Integer startTime = Integer.valueOf(startTimeStr);
 
 			//begin converting duration to time, then add it to start time to get end time.
-			String durationStr = (String) newTaskJSON.get("Duration");
-			String[] durationTimeSplit = durationStr.split("\\.");
-			double decimal = Double.parseDouble(durationTimeSplit[0]);
-			double real = Double.parseDouble(durationStr);
-			double fraction = real - decimal;
-			//multiply by 60 minutes in an hour, reusing fraction
-			fraction = fraction * 60;
-			//using up even more memory since I can't figure out how to single line them (I really tried)
-			int fractionOfHour = (int) fraction;
-			int realHour = (int) real;
-			//put it all together with simple addition
-			Integer endTime = (Integer) startTime + realHour + fractionOfHour;
+			//multiply duration by 60. Should be an integer now.
+			Integer duration = (Integer) newTaskJSON.get("Duration")*60;
+			//add start time * 60 to duration as endTime is in minutes in a day (1440 minutes in a day)
+			Integer endTime = (Integer) startTime*60 + duration;
 
 			//common parameters end here
 
@@ -192,30 +184,72 @@ public class FileHandler{
 		JSONObject fileJsonObject = new JSONObject();
 		JSONArray fileJsonArray = new JSONArray();
 		for (int i = 0; i < listOfTasks.size(); i++){
+
+			//get the start date into an integer with the special format: YYYYMMDD
+			String startDateStrTemp;
+			Integer StartDateCompiled = Integer.valueOf(startDateStrTemp.join("", 
+			Integer.toString(listOfTasks.get(i).getStartDate().getYear()),
+			Integer.toString(listOfTasks.get(i).getStartDate().getMonth()), 
+			Integer.toString(listOfTasks.get(i).getStartDate().getDay())
+			));
+			
+			//get the start time. startTime is in minutes per day so we divide it by 60.
+			Integer startTime = Integer.valueOf(listOfTasks.get(i).getStartTime()/60);
+
+			//begin converting duration to time, then add it to start time to get end time.
+			//multiply duration by 60. Should be an integer now.
+			Integer duration = (Integer) newTaskJSON.get("Duration")*60;
+			//add start time * 60 to duration as endTime is in minutes in a day (1440 minutes in a day)
+
+
+			//make the object we will insert all our data into. This object then goes into the array at the end.
 			JSONObject fileJsonArrayObject = new JSONObject();
 			if(listOfTasks.get(i) instanceof RecursiveTask){
-				//do the shit
+				//Get things into the json in order (though it shouldnt matter)
 				fileJsonArrayObject.put("Name", listOfTasks.get(i).getName());
 				fileJsonArrayObject.put("Type", listOfTasks.get(i).getType());
-				//compile the year month and day into a single string then cast that into an integer.
-				String startDateStrTemp = listOfTasks.get(i).getEndDate.getYear();
-				Integer StartDateCompiled = Integer.valueOf(startDateStrTemp.join("", 
-															Integer.toString(listOfTasks.get(i).getEndDate.getMonth()), 
-															Integer.toString(listOfTasks.get(i).getEndDate.getDay())
-															));
-				fileJsonArrayObject.put("StarDate", StartDateCompiled);
-				fileJsonArrayObject.put("StartTime", listOfTasks.get(i).getStartTime());
-				//calculate duration
-				fileJsonArrayObject.put("Duration", listOfTasks.get(i).get)
+				fileJsonArrayObject.put("StartDate", StartDateCompiled);
+				fileJsonArrayObject.put("StartTime", startTime);
+
+				//get the duration as an int, endTime-startTime divided by 60 should return it.
+				int DurationAsInt = (listOfTasks.get(i).getEndTime() - listOfTasks.get(i).getEndTime())/60;
+				fileJsonArrayObject.put("Duration", DurationAsInt);
+
+				//get the end date. This works the same as the start date but with getEndDate instead.
+				Integer EndDateCompiled = Integer.valueOf(startDateStrTemp.join("", 
+				Integer.toString(listOfTasks.get(i).getEndDate().getYear()),
+				Integer.toString(listOfTasks.get(i).getEndDate().getMonth()), 
+				Integer.toString(listOfTasks.get(i).getEndDate().getDay())
+				));
+				fileJsonArrayObject.put("EndDate", EndDateCompiled);
+				fileJsonArrayObject.put("Frequency", Integer.valueOf(listOfTasks.get(i).getFrequency()));
+				
 			}
 			if(listOfTasks.get(i) instanceof TransientTask){
+				fileJsonArrayObject.put("Name", listOfTasks.get(i).getName());
+				fileJsonArrayObject.put("Type", listOfTasks.get(i).getType());
+				fileJsonArrayObject.put("StartDate", StartDateCompiled);
+				fileJsonArrayObject.put("StartTime", startTime);
 
+				//get the duration as an int, endTime-startTime divided by 60 should return it.
+				int DurationAsInt = (listOfTasks.get(i).getEndTime() - listOfTasks.get(i).getEndTime())/60;
+				fileJsonArrayObject.put("Duration", DurationAsInt);
 			}
 			if(listOfTasks.get(i) instanceof AntiTask){
+				fileJsonArrayObject.put("Name", listOfTasks.get(i).getName());
+				fileJsonArrayObject.put("StartDate", StartDateCompiled);
+				fileJsonArrayObject.put("StartTime", startTime);
 
+				//get the duration as an int, endTime-startTime divided by 60 should return it.
+				int DurationAsInt = (listOfTasks.get(i).getEndTime() - listOfTasks.get(i).getEndTime())/60;
+				fileJsonArrayObject.put("Duration", DurationAsInt);
 			}
+			//add the object, as created in one of three conditions above, to the JSON array here.
+			fileJsonArray.add(fileJsonArrayObject);
 
-			//fileWriter.write(listOfTasks.get(i).);
+			//call writeJSONString to write the entire array all at once to the fileWriter Writer object
+			//this object is declared up top before all these conditional blocks
+			fileJsonObject.writeJSONString(fileWriter);
 		fileWriter.close();
 		}
 	}
