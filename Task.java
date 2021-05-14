@@ -26,7 +26,7 @@ public void print()
 {
 	String start = getRealTime(startTime);
 	String end = getRealTime(endTime);
-	System.out.println("On "+ startDate.getMonth()+"/"+startDate.getDay()+", you have an appointment from "+start+ " to "+end);
+	System.out.println("On "+ startDate.getMonth()+"/"+startDate.getDay()+"/" + startDate.getYear()+", you have an appointment !!! from "+start+ " to "+end);
 }
 public String getRealTime(int time)
 {

@@ -33,6 +33,6 @@ public class TransientTask extends Task {
 	{
 		String start = getRealTime(getStartTime());
 		String end = getRealTime(getEndTime());
-		System.out.println("On "+ getStartDate().getMonth()+"/"+getStartDate().getDay()+", you have a "+ type + " appointment called " + name +" from "+start+ " to "+end);
+		System.out.println("On "+ getStartDate().getMonth()+"/"+getStartDate().getDay()+"/"+getStartDate().getYear()+", you have a "+ type + " appointment called " + name +" from "+start+ " to "+end);
 	}
 }
