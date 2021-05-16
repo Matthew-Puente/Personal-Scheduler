@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.concurrent.RecursiveAction;
 import java.io.FileReader;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
@@ -19,7 +20,7 @@ public class FileHandler{
 
 
 
-	public void readFile(String filelocation) throws FileNotFoundException, IOException, ParseException{
+	public ArrayList<Task> readFile(String filelocation) throws FileNotFoundException, IOException, ParseException{
 		
 		
 		ArrayList<Task> tasksFromFile = new ArrayList<Task>();
@@ -108,7 +109,7 @@ public class FileHandler{
 				//finished casting to intended datatypes
 
 				RecursiveTask newTask = new RecursiveTask(frequencyStr, taskName, taskType, startDate, endDate, startTime, endTime);
-				addRecursiveTask(newTask);
+				tasksFromFile.add(newTask);
 				continue;
 				//do things for recursive task
 			}
@@ -128,8 +129,6 @@ public class FileHandler{
 				String startTimeStr = (String) newTaskJSON.get("startTime");
 				Integer startTime = Integer.valueOf(startTimeStr);
 				*/
-				String endTimeStr = (String) newTaskJSON.get("endTime");
-				Integer endTime = Integer.valueOf(endTimeStr);
 
 				String taskName = (String) newTaskJSON.get("Name");
 
@@ -137,7 +136,7 @@ public class FileHandler{
 				//end casting datatypes
 				
 				TransientTask newTask = new TransientTask(startDate, startTime, endTime, taskName, taskType);
-				addTask(newTask);
+				tasksFromFile.add(newTask);
 				continue;
 
 			}
@@ -163,13 +162,13 @@ public class FileHandler{
 				String taskName = (String) newTaskJSON.get("Name");
 				//end casting datatypes
 				
-				AntiTask newTask = new AntiTask(startDate, startTime, endTime, taskName);
-				removeTask(newTask);
+				AntiTask newTask = new AntiTask(startDate, startTime, endTime);
+				tasksFromFile.add(newTask);
 				continue;
 
 			}
 		}
-		return;
+		return tasksFromFile;
 	}
 	public void writeFile(ArrayList<Task> listOfTasks, String filepath) throws IOException
 	{
@@ -198,7 +197,7 @@ public class FileHandler{
 
 			//begin converting duration to time, then add it to start time to get end time.
 			//multiply duration by 60. Should be an integer now.
-			Integer duration = (Integer) newTaskJSON.get("Duration")*60;
+			//Integer duration = (Integer) listOfTasks.get(i).get("Duration")*60;
 			//add start time * 60 to duration as endTime is in minutes in a day (1440 minutes in a day)
 
 
@@ -206,8 +205,9 @@ public class FileHandler{
 			JSONObject fileJsonArrayObject = new JSONObject();
 			if(listOfTasks.get(i) instanceof RecursiveTask){
 				//Get things into the json in order (though it shouldnt matter)
-				fileJsonArrayObject.put("Name", listOfTasks.get(i).getName());
-				fileJsonArrayObject.put("Type", listOfTasks.get(i).getType());
+				RecursiveTask recursiveTemp = (RecursiveTask) listOfTasks.get(i);
+				fileJsonArrayObject.put("Name", recursiveTemp.getName());
+				fileJsonArrayObject.put("Type", recursiveTemp.getType());
 				fileJsonArrayObject.put("StartDate", StartDateCompiled);
 				fileJsonArrayObject.put("StartTime", startTime);
 
@@ -217,9 +217,9 @@ public class FileHandler{
 
 				//get the end date. This works the same as the start date but with getEndDate instead.
 				Integer EndDateCompiled = Integer.valueOf(startDateStrTemp.join("", 
-				Integer.toString(listOfTasks.get(i).getEndDate().getYear()),
-				Integer.toString(listOfTasks.get(i).getEndDate().getMonth()), 
-				Integer.toString(listOfTasks.get(i).getEndDate().getDay())
+				Integer.toString(recursiveTemp.getEndDate().getYear()),
+				Integer.toString(recursiveTemp.getEndDate().getMonth()), 
+				Integer.toString(recursiveTemp.getEndDate().getDay())
 				));
 				fileJsonArrayObject.put("EndDate", EndDateCompiled);
 				fileJsonArrayObject.put("Frequency", Integer.valueOf(listOfTasks.get(i).getFrequency()));
