@@ -1,4 +1,4 @@
-package basePackage;
+
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,48 +11,15 @@ public class Driver
 
 	public static void main(String[] args)
 	{
-
-		Driver driver = new Driver();
-
 		Scheduler scheduler = new Scheduler();
-
-		FileHandler fileHandler;
 
 		Scanner scanner = new Scanner(System.in);
 
-		// boolean for if a task is successfully created
-		boolean creationSuccessful = false;
+		Driver driver = new Driver();
 
-		String name, type, frequency;
+		//FileHandler fileHandler;
 
-		// for user to input the date
-		String dateString = "";
-		// for user to input the times
-		String startTimeString = "";
-
-		String endTimeString = "";
-		// for parsing the time strings to an integer
-		int startTime = 0;
-
-		int endTime = 0;
-
-		char choice = 'n';
-
-		/*
-		System.out.println("Would you like to import tasks from a file? (y/n)");
-		choice = scanner.next().charAt(0);
-		scanner.nextLine();
-		if (choice == 'y')
-		{
-			// open the users file
-		}
-		*/
-
-		Date tempStartDate = new Date(01,01,01);
-
-		Date tempEndDate = new Date(01,01,01);
-
-		Date dateToRemove = new Date(01, 01,01);
+		char choice = '0';
 
 		while (choice != '5')
 		{
@@ -70,201 +37,30 @@ public class Driver
 
 				// 2. create a transient task
 				case '2':
-					System.out.println("Enter transient task date in format: MM/dd/yyyy");
-					dateString = scanner.nextLine();
-
-					// if the date is not valid, read it from the user until it's correct
-					while (!driver.dateIsValid(dateString))
-					{
-						System.out.println("Incorrect format, enter date in format: MM/dd/yyyy");
-						dateString = scanner.nextLine();
-					}
-
-					tempStartDate.setDay(driver.getDay(dateString));
-					tempStartDate.setMonth(driver.getMonth(dateString));
-					tempStartDate.setYear(driver.getYear(dateString));
-
-					System.out.println("Enter transient task start time in format: 12:00 AM or 5:15AM or 2:30PM or 6:45 PM (only 00,15,30,45 for minutes)");
-					startTimeString = scanner.nextLine();
-
-					// if the time is not valid, read it from the user until it's correct
-					while (!driver.timeIsValid(startTimeString))
-					{
-						System.out.println("Incorrect format, enter start time in format: 12:00 AM or 5:15AM or 2:30PM or 6:45 PM (only 00,15,30,45 for minutes)");
-						startTimeString = scanner.nextLine();
-					}
-
-					startTime = driver.getTime(startTimeString);
-
-					// same thing here but for end time instead of start time
-					System.out.println("Enter transient task end time in format: 12:00 AM or 5:15AM or 2:30PM or 6:45 PM (only 00,15,30,45 for minutes)");
-					endTimeString = scanner.nextLine();
-
-					while (!driver.timeIsValid(endTimeString))
-					{
-						System.out.println("Incorrect format, enter end time in format: 12:00 AM or 5:15AM or 2:30PM or 6:45 PM (only 00,15,30,45 for minutes)");
-						endTimeString = scanner.nextLine();
-					}
-
-					endTime = driver.getTime(endTimeString);
-
-					System.out.println("Enter the name of the transient task:");
-					name = scanner.nextLine();
-
-					System.out.println("Enter the type of the transient task:");
-					type = scanner.nextLine();
-
-					TransientTask transientTask = new TransientTask(tempStartDate, startTime, endTime, name, type);
-					// the scheduler returns true if the task was successfully created, false otherwise
-					creationSuccessful = scheduler.createTransientTask(transientTask);
-
-					if (creationSuccessful)
-					{
-						System.out.println("Successfully created transient task");
-					}
-					else
-					{
-						System.out.println("Failed to create transient task");
-					}
+					driver.createTransientTask(scheduler);
 
 					break;
 
 				// 3. create a recursive task
 				case '3':
-					System.out.println("Enter recursive task start date in format: MM/dd/yyyy");
-					dateString = scanner.nextLine();
-
-					// if the date is not valid, read it from the user until it's correct
-					while (!driver.dateIsValid(dateString))
-					{
-						System.out.println("Incorrect format, enter date in format: MM/dd/yyyy");
-						dateString = scanner.nextLine();
-					}
-
-					tempStartDate.setDay(driver.getDay(dateString));
-					tempStartDate.setMonth(driver.getMonth(dateString));
-					tempStartDate.setYear(driver.getYear(dateString));
-
-					System.out.println("Enter recursive task end date in format: MM/dd/yyyy");
-					dateString = scanner.nextLine();
-
-					// if the date is not valid, read it from the user until it's correct
-					while (!driver.dateIsValid(dateString))
-					{
-						System.out.println("Incorrect format, enter date in format: MM/dd/yyyy");
-						dateString = scanner.nextLine();
-					}
-
-					tempEndDate.setDay(driver.getDay(dateString));
-					tempEndDate.setMonth(driver.getMonth(dateString));
-					tempEndDate.setYear(driver.getYear(dateString));
-
-					System.out.println("Enter recursive task start time in format: 12:00 AM or 5:15AM or 2:30PM or 6:45 PM (only 00,15,30,45 for minutes)");
-					startTimeString = scanner.nextLine();
-
-					// if the time is not valid, read it from the user until it's correct
-					while (!driver.timeIsValid(startTimeString))
-					{
-						System.out.println("Incorrect format, enter start time in format: 12:00 AM or 5:15AM or 2:30PM or 6:45 PM (only 00,15,30,45 for minutes)");
-						startTimeString = scanner.nextLine();
-					}
-
-					startTime = driver.getTime(startTimeString);
-
-					System.out.println("Enter recursive task end time in format: 12:00 AM or 5:15AM or 2:30PM or 6:45 PM (only 00,15,30,45 for minutes)");
-					endTimeString = scanner.nextLine();
-
-					// if the time is not valid, read it from the user until it's correct
-					while (!driver.timeIsValid(endTimeString))
-					{
-						System.out.println("Incorrect format, enter end time in format: 12:00 AM or 5:15AM or 2:30PM or 6:45 PM (only 00,15,30,45 for minutes)");
-						endTimeString = scanner.nextLine();
-					}
-
-					endTime = driver.getTime(endTimeString);
-
-					System.out.println("Enter the frequency of the recursive task (D for daily, W for weekly, M for monthly):");
-					frequency = scanner.nextLine();
-
-					System.out.println("Enter the name of the recursive task:");
-					name = scanner.nextLine();
-
-					System.out.println("Enter the type of the recursive task:");
-					type = scanner.nextLine();
-
-					RecursiveTask recursiveTask = new RecursiveTask(frequency, name, type, tempStartDate,tempEndDate, startTime, endTime);
-
-					creationSuccessful = scheduler.createRecursiveTask(recursiveTask);
-
-					if (creationSuccessful)
-					{
-						System.out.println("Successfully created recursive task");
-					}
-					else
-					{
-						System.out.println("Failed to create recursive task");
-					}
+					driver.createRecursiveTask(scheduler);
 
 					break;
 
 				// 4. create an anti task
 				case '4':
-					System.out.println("Enter anti task date in format: MM/dd/yyyy");
-					dateString = scanner.nextLine();
-
-					// if the date is not valid, read it from the user until it's correct
-					while (!driver.dateIsValid(dateString))
-					{
-						System.out.println("Incorrect format, enter date in format: MM/dd/yyyy");
-						dateString = scanner.nextLine();
-					}
-
-					dateToRemove.setDay(driver.getDay(dateString));
-					dateToRemove.setMonth(driver.getMonth(dateString));
-					dateToRemove.setYear(driver.getYear(dateString));
-
-					System.out.println("Enter anti task start time in format: 12:00 AM or 5:15AM or 2:30PM or 6:45 PM (only 00,15,30,45 for minutes)");
-					startTimeString = scanner.nextLine();
-
-					// if the time is not valid, read it from the user until it's correct
-					while (!driver.timeIsValid(startTimeString))
-					{
-						System.out.println("Incorrect format, enter start time in format: 12:00 AM or 5:15AM or 2:30PM or 6:45 PM (only 00,15,30,45 for minutes)");
-						startTimeString = scanner.nextLine();
-					}
-
-					startTime = driver.getTime(startTimeString);
-
-					// same thing here but for end time instead of start time
-					System.out.println("Enter anti task end time in format: 12:00 AM or 5:15AM or 2:30PM or 6:45 PM (only 00,15,30,45 for minutes)");
-					endTimeString = scanner.nextLine();
-
-					while (!driver.timeIsValid(endTimeString))
-					{
-						System.out.println("Incorrect format, enter end time in format: 12:00 AM or 5:15AM or 2:30PM or 6:45 PM (only 00,15,30,45 for minutes)");
-						endTimeString = scanner.nextLine();
-					}
-
-					endTime = driver.getTime(endTimeString);
-
-					AntiTask antiTask = new AntiTask(dateToRemove,startTime,endTime);
-
-					creationSuccessful = scheduler.removeTask(antiTask);
-
-					if (creationSuccessful)
-					{
-						System.out.println("Successfully created anti task");
-					}
-					else
-					{
-						System.out.println("Failed to create anti task");
-					}
+					driver.createAntiTask(scheduler);
 
 					break;
 
 				// close the file and end the program
 				case '5':
 
+
+					break;
+
+				default:
+					System.out.println("Invalid choice, select your choice again:");
 					break;
 
 			}
@@ -455,6 +251,285 @@ public class Driver
 
 		}
 		return -1;
+	}
+
+	void createTransientTask(Scheduler scheduler)
+	{
+		Scanner scanner = new Scanner(System.in);
+
+		Driver driver = new Driver();
+
+		String dateString = "";
+
+		// for user to input the times
+		String startTimeString = "";
+
+		String endTimeString = "";
+		// for parsing the time strings to an integer
+		int startTime = 0;
+
+		int endTime = 0;
+
+		Date tempStartDate = new Date(01,01,01);
+
+		// boolean for if a task is successfully created
+		boolean creationSuccessful = false;
+
+		String name = "";
+
+		String type = "";
+
+		System.out.println("Enter transient task date in format: MM/dd/yyyy");
+		dateString = scanner.nextLine();
+
+		// if the date is not valid, read it from the user until it's correct
+		while (!driver.dateIsValid(dateString))
+		{
+			System.out.println("Incorrect format, enter date in format: MM/dd/yyyy");
+			dateString = scanner.nextLine();
+		}
+
+		tempStartDate.setDay(driver.getDay(dateString));
+		tempStartDate.setMonth(driver.getMonth(dateString));
+		tempStartDate.setYear(driver.getYear(dateString));
+
+		System.out.println("Enter transient task start time in format: 12:00 AM or 5:15AM or 2:30PM or 6:45 PM (only 00,15,30,45 for minutes)");
+		startTimeString = scanner.nextLine();
+
+		// if the time is not valid, read it from the user until it's correct
+		while (!driver.timeIsValid(startTimeString))
+		{
+			System.out.println("Incorrect format, enter start time in format: 12:00 AM or 5:15AM or 2:30PM or 6:45 PM (only 00,15,30,45 for minutes)");
+			startTimeString = scanner.nextLine();
+		}
+
+		startTime = driver.getTime(startTimeString);
+
+		// same thing here but for end time instead of start time
+		System.out.println("Enter transient task end time in format: 12:00 AM or 5:15AM or 2:30PM or 6:45 PM (only 00,15,30,45 for minutes)");
+		endTimeString = scanner.nextLine();
+
+		while (!driver.timeIsValid(endTimeString))
+		{
+			System.out.println("Incorrect format, enter end time in format: 12:00 AM or 5:15AM or 2:30PM or 6:45 PM (only 00,15,30,45 for minutes)");
+			endTimeString = scanner.nextLine();
+		}
+
+		endTime = driver.getTime(endTimeString);
+
+		System.out.println("Enter the name of the transient task:");
+		name = scanner.nextLine();
+
+		System.out.println("Enter the type of the transient task:");
+		type = scanner.nextLine();
+
+		TransientTask transientTask = new TransientTask(tempStartDate, startTime, endTime, name, type);
+		// the scheduler returns true if the task was successfully created, false otherwise
+		creationSuccessful = scheduler.createTransientTask(transientTask);
+
+		if (creationSuccessful)
+		{
+			System.out.println("Successfully created transient task");
+		}
+		else
+		{
+			System.out.println("Failed to create transient task");
+		}
+	}
+	// overloaded createTransientTask() function
+	void createTransientTask(Scheduler scheduler, Date tempStartDate, int startTime, int endTime, String name, String type)
+	{
+
+	}
+
+	void createRecursiveTask(Scheduler scheduler)
+	{
+		Scanner scanner = new Scanner(System.in);
+
+		Driver driver = new Driver();
+
+		String dateString = "";
+
+		// for user to input the times
+		String startTimeString = "";
+
+		String endTimeString = "";
+		// for parsing the time strings to an integer
+		int startTime = 0;
+
+		int endTime = 0;
+
+		Date tempStartDate = new Date(01,01,01);
+
+		Date tempEndDate = new Date(01,01,01);
+
+		// boolean for if a task is successfully created
+		boolean creationSuccessful = false;
+
+		String name = "";
+
+		String type = "";
+
+		String frequency = "";
+
+		System.out.println("Enter recursive task start date in format: MM/dd/yyyy");
+		dateString = scanner.nextLine();
+
+		// if the date is not valid, read it from the user until it's correct
+		while (!driver.dateIsValid(dateString))
+		{
+			System.out.println("Incorrect format, enter date in format: MM/dd/yyyy");
+			dateString = scanner.nextLine();
+		}
+
+		tempStartDate.setDay(driver.getDay(dateString));
+		tempStartDate.setMonth(driver.getMonth(dateString));
+		tempStartDate.setYear(driver.getYear(dateString));
+
+		System.out.println("Enter recursive task end date in format: MM/dd/yyyy");
+		dateString = scanner.nextLine();
+
+		// if the date is not valid, read it from the user until it's correct
+		while (!driver.dateIsValid(dateString))
+		{
+			System.out.println("Incorrect format, enter date in format: MM/dd/yyyy");
+			dateString = scanner.nextLine();
+		}
+
+		tempEndDate.setDay(driver.getDay(dateString));
+		tempEndDate.setMonth(driver.getMonth(dateString));
+		tempEndDate.setYear(driver.getYear(dateString));
+
+		System.out.println("Enter recursive task start time in format: 12:00 AM or 5:15AM or 2:30PM or 6:45 PM (only 00,15,30,45 for minutes)");
+		startTimeString = scanner.nextLine();
+
+		// if the time is not valid, read it from the user until it's correct
+		while (!driver.timeIsValid(startTimeString))
+		{
+			System.out.println("Incorrect format, enter start time in format: 12:00 AM or 5:15AM or 2:30PM or 6:45 PM (only 00,15,30,45 for minutes)");
+			startTimeString = scanner.nextLine();
+		}
+
+		startTime = driver.getTime(startTimeString);
+
+		System.out.println("Enter recursive task end time in format: 12:00 AM or 5:15AM or 2:30PM or 6:45 PM (only 00,15,30,45 for minutes)");
+		endTimeString = scanner.nextLine();
+
+		// if the time is not valid, read it from the user until it's correct
+		while (!driver.timeIsValid(endTimeString))
+		{
+			System.out.println("Incorrect format, enter end time in format: 12:00 AM or 5:15AM or 2:30PM or 6:45 PM (only 00,15,30,45 for minutes)");
+			endTimeString = scanner.nextLine();
+		}
+
+		endTime = driver.getTime(endTimeString);
+
+		System.out.println("Enter the frequency of the recursive task (D for daily, W for weekly, M for monthly):");
+		frequency = scanner.nextLine();
+
+		System.out.println("Enter the name of the recursive task:");
+		name = scanner.nextLine();
+
+		System.out.println("Enter the type of the recursive task:");
+		type = scanner.nextLine();
+
+		RecursiveTask recursiveTask = new RecursiveTask(frequency, name, type, tempStartDate,tempEndDate, startTime, endTime);
+
+		creationSuccessful = scheduler.createRecursiveTask(recursiveTask);
+
+		if (creationSuccessful)
+		{
+			System.out.println("Successfully created recursive task");
+		}
+		else
+		{
+			System.out.println("Failed to create recursive task");
+		}
+	}
+	// overloaded createRecursiveTask() function
+	void createRecursiveTask(Scheduler scheduler, String frequency, String name, String type, Date tempStartDate, Date tempEndDate, String startTime, String endTime)
+	{
+
+	}
+
+	void createAntiTask(Scheduler scheduler)
+	{
+		Scanner scanner = new Scanner(System.in);
+
+		Driver driver = new Driver();
+
+		String dateString = "";
+
+		// for user to input the times
+		String startTimeString = "";
+
+		String endTimeString = "";
+		// for parsing the time strings to an integer
+		int startTime = 0;
+
+		int endTime = 0;
+
+		Date dateToRemove = new Date(01, 01,01);
+
+		// boolean for if a task is successfully created
+		boolean creationSuccessful = false;
+
+		System.out.println("Enter anti task date in format: MM/dd/yyyy");
+		dateString = scanner.nextLine();
+
+		// if the date is not valid, read it from the user until it's correct
+		while (!driver.dateIsValid(dateString))
+		{
+			System.out.println("Incorrect format, enter date in format: MM/dd/yyyy");
+			dateString = scanner.nextLine();
+		}
+
+		dateToRemove.setDay(driver.getDay(dateString));
+		dateToRemove.setMonth(driver.getMonth(dateString));
+		dateToRemove.setYear(driver.getYear(dateString));
+
+		System.out.println("Enter anti task start time in format: 12:00 AM or 5:15AM or 2:30PM or 6:45 PM (only 00,15,30,45 for minutes)");
+		startTimeString = scanner.nextLine();
+
+		// if the time is not valid, read it from the user until it's correct
+		while (!driver.timeIsValid(startTimeString))
+		{
+			System.out.println("Incorrect format, enter start time in format: 12:00 AM or 5:15AM or 2:30PM or 6:45 PM (only 00,15,30,45 for minutes)");
+			startTimeString = scanner.nextLine();
+		}
+
+		startTime = driver.getTime(startTimeString);
+
+		// same thing here but for end time instead of start time
+		System.out.println("Enter anti task end time in format: 12:00 AM or 5:15AM or 2:30PM or 6:45 PM (only 00,15,30,45 for minutes)");
+		endTimeString = scanner.nextLine();
+
+		while (!driver.timeIsValid(endTimeString))
+		{
+			System.out.println("Incorrect format, enter end time in format: 12:00 AM or 5:15AM or 2:30PM or 6:45 PM (only 00,15,30,45 for minutes)");
+			endTimeString = scanner.nextLine();
+		}
+
+		endTime = driver.getTime(endTimeString);
+
+		AntiTask antiTask = new AntiTask(dateToRemove,startTime,endTime);
+
+		creationSuccessful = scheduler.removeTask(antiTask);
+
+		if (creationSuccessful)
+		{
+			System.out.println("Successfully created anti task");
+		}
+		else
+		{
+			System.out.println("Failed to create anti task");
+		}
+	}
+
+	// overloaded createAntiTask() function
+	void createAntiTask(Scheduler scheduler, Date dateToRemove, int startTime, int endTime)
+	{
+
 	}
 
 }
