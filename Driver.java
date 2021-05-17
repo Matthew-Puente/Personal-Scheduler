@@ -1,8 +1,11 @@
 
 
-import java.text.ParseException;
+import org.json.simple.parser.ParseException;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.*;
 
@@ -17,7 +20,22 @@ public class Driver
 
 		Driver driver = new Driver();
 
-		//FileHandler fileHandler;
+		ArrayList<Task> tasks = new ArrayList<>();
+
+		FileHandler fileHandler = new FileHandler();
+
+		try {
+			tasks = fileHandler.readFile("C:\\Users\\Vincent\\Desktop\\CS3560ObjectOrientedProgramming\\Project\\Set1.json");
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println(tasks);
+
+
+		String input = "";
 
 		char choice = '0';
 
@@ -25,8 +43,16 @@ public class Driver
 		{
 			driver.printOptions();
 
-			choice = scanner.next().charAt(0);
-			scanner.nextLine();
+			input = scanner.nextLine();
+
+			while (input.length() != 1)
+			{
+				System.out.println("Invalid choice, select your choice again:");
+				driver.printOptions();
+				input = scanner.nextLine();
+			}
+
+			choice = input.charAt(0);
 
 			switch (choice)
 			{	// 1. print the schedule
@@ -55,7 +81,7 @@ public class Driver
 
 				// close the file and end the program
 				case '5':
-
+					System.out.println("Ending program");
 
 					break;
 
