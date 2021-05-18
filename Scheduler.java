@@ -132,7 +132,13 @@ public class Scheduler {
 		*/
 		for(int i = startIndex;i<endIndex;i++)
 		{
-			tempArr[i]= 2;
+			if(i == startIndex||i == endIndex -1)
+			{
+				tempArr[i] = 3;
+			}
+			else 
+				tempArr[i] = 2;
+			
 		}
 		/*
 		System.out.println("Day after recursive Task Added");
@@ -202,8 +208,11 @@ public class Scheduler {
 		*/
 		for(int i = startIndex;i<endIndex;i++)
 		{
-			//System.out.print(tempArr[i]+" ");
-			if(tempArr[i] != 2)
+			if((i == startIndex|| i== endIndex-1) && tempArr[i] != 3)
+			{
+				return false;
+			}
+			if(i != startIndex && tempArr[i] != 2 && i != endIndex-1)
 			{
 				return false;
 			}

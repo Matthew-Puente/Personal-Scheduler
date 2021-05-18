@@ -57,7 +57,7 @@ public class FileHandler{
 
 			//begin converting duration to time, then add it to start time to get end time.
 			//multiply duration by 60. Should be an integer now.
-			Double durationLong = (Double) newTaskJSON.get("Duration")*60;
+			Double durationLong = Double.valueOf(newTaskJSON.get("Duration").toString())*60;
 			Integer duration = (Integer) durationLong.intValue();
 			//add start time * 60 to duration as endTime is in minutes in a day (1440 minutes in a day)
 			Integer endTime = (Integer) startTime + duration;
