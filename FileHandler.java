@@ -24,11 +24,6 @@ public class FileHandler{
 		
 		
 		ArrayList<Task> tasksFromFile = new ArrayList<Task>();
-		/*
-		Object obj = parser.parse(new FileReader(filelocation));
-		JSONArray jsonArrayFromFile = (JSONArray) jsonObject.get();
-		Iterator jsonIterator
-		*/
         JSONParser parser = new JSONParser();
 		JSONArray jsonFileArray = (JSONArray) parser.parse(new FileReader(filelocation));
 		for (Object o : jsonFileArray){
@@ -82,21 +77,6 @@ public class FileHandler{
 				Integer endDay = Integer.valueOf(endDateStr.substring(6));
 				Date endDate = new Date(endMonth, endDay, endYear);
 
-				//begin converting duration to time, then add it to start time to get end time.
-				/**
-				String durationStr = (String) newTaskJSON.get("Duration");
-				String[] durationTimeSplit = durationStr.split("\\.");
-				double decimal = Double.parseDouble(durationTimeSplit[0]);
-				double real = Double.parseDouble(durationStr);
-				double fraction = real - decimal;
-				//multiply by 60 minutes in an hour, reusing fraction
-				fraction = fraction * 60;
-				//using up even more memory since I can't figure out how to single line them (I really tried)
-				int fractionOfHour = (int) fraction;
-				int realHour = (int) real;
-				//put it all together with simple addition
-				Integer endTime = (Integer) startTime + realHour + fractionOfHour;
-				*/
 
 				long frequency = (long) newTaskJSON.get("Frequency");
 				String frequencyStr;
@@ -145,38 +125,14 @@ public class FileHandler{
 				continue;
 
 			}
-			//detecting if the current task is an antitask
-			/*if(newTaskJSON.get("Type").equals("Cancellation")){
-				//do things for normal tasks
-
-				//again casting to datatypes
-				String startDateStr = (String) String.valueOf(newTaskJSON.get("Date"));
-				Integer startYear = Integer.valueOf(startDateStr.substring(0,4));
-				Integer startMonth = Integer.valueOf(startDateStr.substring(4, 6));
-				Integer startDay = Integer.valueOf(startDateStr.substring(6));
-				startDate = new Date(startMonth,startDay, startYear);
-				//end casting datatypes
-				
-				AntiTask newTask = new AntiTask(startDate, startTime, endTime);
-				tasksFromFile.add(newTask);
-				continue;
-
-			}*/
 		}
 		return tasksFromFile;
 	}
 	
 	public void writeFile(LinkedList<Task> linkedList, String filepath) throws IOException
 	{
-		//'filepath' is the absolute filepath (like C:\documents\options.txt)
 
-
-		//incoming data is as a linked list. make sure to adhere to the pattern as written above
-		//delimiter is <,> with the arrow/less then/greater than signs
-		//recursive should be saved in this order:
-		//int startMonth, int startDay, int endMonth, int endDay, String frequency, String name, String type, int startTime, int endTime
 		Writer fileWriter = new FileWriter(filepath, false);
-		//JSONObject fileJsonObject = new JSONObject();
 		JSONArray fileJsonArray = new JSONArray();
 		for (int i = 0; i < linkedList.size(); i++){
 
@@ -226,11 +182,6 @@ public class FileHandler{
 			
 			//get the start time. startTime is in minutes per day so we divide it by 60.
 			Integer startTime = Integer.valueOf(linkedList.get(i).getStartTime()/60);
-			//int startTimeMinutes = Integer.valueOf(linkedList.get(i).getStartTime()%60);
-			//begin converting duration to time, then add it to start time to get end time.
-			//multiply duration by 60. Should be an integer now.
-			//Integer duration = (Integer) listOfTasks.get(i).get("Duration")*60;
-			//add start time * 60 to duration as endTime is in minutes in a day (1440 minutes in a day)
 
 
 			//make the object we will insert all our data into. This object then goes into the array at the end.
@@ -311,6 +262,7 @@ public class FileHandler{
 				
 			}
 			if(linkedList.get(i) instanceof TransientTask){
+				//create a transient task. Straightforward.
 				TransientTask transientTemp = (TransientTask) linkedList.get(i);
 				fileJsonArrayObject.put("Name", transientTemp.getName());
 				fileJsonArrayObject.put("Type", transientTemp.getType());
@@ -338,8 +290,6 @@ public class FileHandler{
 			//this object is declared up top before all these conditional blocks
 
 		}
-		//The professor did NOT have a label for the array within the object so presumably we can pass an empty string.
-		//fileJsonObject.put(fileJsonArray);
 		fileJsonArray.writeJSONString(fileWriter);
 		fileWriter.close();
 	}
