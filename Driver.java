@@ -24,7 +24,7 @@ public class Driver
 		ArrayList<Task> tasks = new ArrayList<>();
 
 		FileHandler fileHandler = new FileHandler();
-		/*
+
 		try {
 			tasks = fileHandler.readFile("C:\\Users\\Vincent\\Desktop\\CS3560ObjectOrientedProgramming\\Project\\Set1.json");
 		} catch (IOException e) {
@@ -34,7 +34,6 @@ public class Driver
 		}
 
 		System.out.println(tasks);
-		*/
 
 		String input = "";
 
