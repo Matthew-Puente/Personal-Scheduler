@@ -22,13 +22,13 @@ public class Driver
 
 		FileHandler fileHandler = new FileHandler();
 
-		driver.createTasksFromFile(scheduler, fileHandler);
+		String filePath = "";
 
 		String input = "";
 
 		char choice = '0';
 
-		while (choice != '5')
+		while (choice != '7')
 		{
 			driver.printOptions();
 
@@ -47,31 +47,38 @@ public class Driver
 			{	// 1. print the schedule
 				case '1':
 					scheduler.printAllTask();
-
 					break;
 
 				// 2. create a transient task
 				case '2':
 					driver.createTransientTask(scheduler);
-
 					break;
 
 				// 3. create a recursive task
 				case '3':
 					driver.createRecursiveTask(scheduler);
-
 					break;
 
 				// 4. create an anti task
 				case '4':
 					driver.createAntiTask(scheduler);
-
 					break;
 
-				// close the file and end the program
+				// 5. read from a .json file
 				case '5':
-					System.out.println("Ending program");
+					System.out.println("Enter the file path to read:");
+					filePath = scanner.nextLine();
+					driver.createTasksFromFile(scheduler, fileHandler, filePath);
+					break;
 
+				// 6. write to a .json file
+				case '6':
+					System.out.println("Enter the file path to write:");
+					break;
+
+				// 7. end the program
+				case '7':
+					System.out.println("Ending program");
 					break;
 
 				default:
@@ -89,7 +96,9 @@ public class Driver
 		System.out.println("2. Create a transient task");
 		System.out.println("3. Create a recursive task");
 		System.out.println("4. Create an anti task");
-		System.out.println("5. quit");
+		System.out.println("5. Read tasks from a .json file");
+		System.out.println("6. Write tasks to a .json file");
+		System.out.println("7. quit");
 	}
 
 	public boolean dateIsValid(String d)
@@ -622,12 +631,12 @@ public class Driver
 		};
 	}
 
-	void createTasksFromFile(Scheduler scheduler, FileHandler fileHandler)
+	void createTasksFromFile(Scheduler scheduler, FileHandler fileHandler, String filePath)
 	{
 		ArrayList<Task> tasks = new ArrayList<>();
 
 		try {
-			tasks = fileHandler.readFile("C:\\Users\\Vincent\\Desktop\\CS3560ObjectOrientedProgramming\\Project\\Set1.json");
+			tasks = fileHandler.readFile(filePath);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ParseException e) {
@@ -648,11 +657,11 @@ public class Driver
 			}
 			else
 			{
-				System.out.println("Wrong type");
+				scheduler.removeTask((AntiTask) tasks.get(i));
 			}
 
 		}
-		System.out.println("Added all tasks from the file");
+		System.out.println("Finished adding tasks from the file");
 	}
 
 }
