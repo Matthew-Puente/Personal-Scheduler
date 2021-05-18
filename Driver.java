@@ -649,15 +649,30 @@ public class Driver
 		{
 			if (tasks.get(i) instanceof TransientTask)
 			{
-				scheduler.createTransientTask((TransientTask) tasks.get(i));
+				if (scheduler.createTransientTask((TransientTask) tasks.get(i)))
+				{
+					System.out.println("Successfully created TransientTask from file");
+				}
+				else
+					System.out.println("Failed to create TransientTask from file");
 			}
 			else if (tasks.get(i) instanceof RecursiveTask)
 			{
-				scheduler.createRecursiveTask((RecursiveTask) tasks.get(i));
+				if (scheduler.createRecursiveTask((RecursiveTask) tasks.get(i)))
+				{
+					System.out.println("Successfully created RecursiveTask from file");
+				}
+				else
+					System.out.println("Failed to create RecursiveTask from file");
 			}
 			else
 			{
-				scheduler.removeTask((AntiTask) tasks.get(i));
+				if (scheduler.removeTask((AntiTask) tasks.get(i)))
+				{
+					System.out.println("Successfully created AntiTask from file");
+				}
+				else
+					System.out.println("Failed to create AntiTask from file");
 			}
 
 		}
