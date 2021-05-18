@@ -52,7 +52,7 @@ public class FileHandler{
 
 
 			String startTimeStr = (String) String.valueOf(newTaskJSON.get("StartTime"));
-			Integer startTime = (Integer) Integer.valueOf(startTimeStr);
+			Integer startTime = (Integer) Integer.valueOf(startTimeStr)*60;
 
 			//begin converting duration to time, then add it to start time to get end time.
 			//multiply duration by 60. Should be an integer now.
@@ -169,7 +169,7 @@ public class FileHandler{
 		//recursive should be saved in this order:
 		//int startMonth, int startDay, int endMonth, int endDay, String frequency, String name, String type, int startTime, int endTime
 		Writer fileWriter = new FileWriter(filepath, true);
-		JSONObject fileJsonObject = new JSONObject();
+		//JSONObject fileJsonObject = new JSONObject();
 		JSONArray fileJsonArray = new JSONArray();
 		for (int i = 0; i < listOfTasks.size(); i++){
 
@@ -219,8 +219,8 @@ public class FileHandler{
 
 
 				//get the duration as an int, endTime-startTime divided by 60 should return it.
-				int DurationAsInt = (recursiveTemp.getEndTime() - recursiveTemp.getEndTime())/60;
-				fileJsonArrayObject.put("Duration", DurationAsInt);
+				int duration = recursiveTemp.getEndTime() - startTime;
+				fileJsonArrayObject.put("Duration", duration);
 
 
 				//get the end date. This works the same as the start date but with getEndDate instead.
@@ -243,8 +243,6 @@ public class FileHandler{
 						break;
 				}
 				fileJsonArrayObject.put("Frequency", frequency);
-
-				fileJsonArray.add(fileJsonArrayObject);
 				
 			}
 			if(listOfTasks.get(i) instanceof TransientTask){
@@ -255,8 +253,8 @@ public class FileHandler{
 				fileJsonArrayObject.put("StartTime", startTime);
 
 				//get the duration as an int, endTime-startTime divided by 60 should return it.
-				int DurationAsInt = (transientTemp.getEndTime() - transientTemp.getEndTime())/60;
-				fileJsonArrayObject.put("Duration", DurationAsInt);
+				double duration = transientTemp.getEndTime() - startTime;
+				fileJsonArrayObject.put("Duration", duration);
 			}
 			if(listOfTasks.get(i) instanceof AntiTask){
 				AntiTask antitaskTemp = (AntiTask) listOfTasks.get(i);
@@ -264,8 +262,8 @@ public class FileHandler{
 				fileJsonArrayObject.put("StartTime", startTime);
 
 				//get the duration as an int, endTime-startTime divided by 60 should return it.
-				double DurationAsDouble = (antitaskTemp.getEndTime() - antitaskTemp.getEndTime())/60;
-				fileJsonArrayObject.put("Duration", DurationAsDouble);
+				double duration = antitaskTemp.getEndTime() - startTime;
+				fileJsonArrayObject.put("Duration", duration);
 
 			}
 			//add the object, as created in one of three conditions above, to the JSON array here.
@@ -276,8 +274,8 @@ public class FileHandler{
 
 		}
 		//The professor did NOT have a label for the array within the object so presumably we can pass an empty string.
-		fileJsonObject.put("", fileJsonArray);
-		fileJsonObject.writeJSONString(fileWriter);
+		//fileJsonObject.put(fileJsonArray);
+		fileJsonArray.writeJSONString(fileWriter);
 		fileWriter.close();
 	}
 }
