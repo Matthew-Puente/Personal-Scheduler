@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Scanner;
 import java.util.regex.*;
 
@@ -21,19 +20,9 @@ public class Driver
 
 		Driver driver = new Driver();
 
-		ArrayList<Task> tasks = new ArrayList<>();
-
 		FileHandler fileHandler = new FileHandler();
 
-		try {
-			tasks = fileHandler.readFile("C:\\Users\\Vincent\\Desktop\\CS3560ObjectOrientedProgramming\\Project\\Set1.json");
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-
-		System.out.println(tasks);
+		driver.createTasksFromFile(scheduler, fileHandler);
 
 		String input = "";
 
@@ -369,9 +358,20 @@ public class Driver
 		}
 	}
 	// overloaded createTransientTask() function
-	void createTransientTask(Scheduler scheduler, Date tempStartDate, int startTime, int endTime, String name, String type)
+	void createTransientTask(Scheduler scheduler, TransientTask transientTask)
 	{
+		boolean creationSuccessful = false;
 
+		creationSuccessful = scheduler.createTransientTask(transientTask);
+
+		if (creationSuccessful)
+		{
+			System.out.println("Successfully created transient task");
+		}
+		else
+		{
+			System.out.println("Failed to create transient task");
+		}
 	}
 
 	void createRecursiveTask(Scheduler scheduler)
@@ -491,9 +491,20 @@ public class Driver
 		}
 	}
 	// overloaded createRecursiveTask() function
-	void createRecursiveTask(Scheduler scheduler, String frequency, String name, String type, Date tempStartDate, Date tempEndDate, String startTime, String endTime)
+	void createRecursiveTask(Scheduler scheduler, RecursiveTask recursiveTask)
 	{
+		boolean creationSuccessful = false;
 
+		creationSuccessful = scheduler.createRecursiveTask(recursiveTask);
+
+		if (creationSuccessful)
+		{
+			System.out.println("Successfully created recursive task");
+		}
+		else
+		{
+			System.out.println("Failed to create recursive task");
+		}
 	}
 
 	void createAntiTask(Scheduler scheduler)
@@ -571,9 +582,20 @@ public class Driver
 	}
 
 	// overloaded createAntiTask() function
-	void createAntiTask(Scheduler scheduler, Date dateToRemove, int startTime, int endTime)
+	void createAntiTask(Scheduler scheduler, AntiTask antiTask)
 	{
+		boolean creationSuccessful = false;
 
+		creationSuccessful = scheduler.removeTask(antiTask);
+
+		if (creationSuccessful)
+		{
+			System.out.println("Successfully created anti task");
+		}
+		else
+		{
+			System.out.println("Failed to create anti task");
+		}
 	}
 
 	public boolean transientTypeIsValid(String t)
@@ -598,6 +620,39 @@ public class Driver
 			case "D", "W", "M" -> true;
 			default -> false;
 		};
+	}
+
+	void createTasksFromFile(Scheduler scheduler, FileHandler fileHandler)
+	{
+		ArrayList<Task> tasks = new ArrayList<>();
+
+		try {
+			tasks = fileHandler.readFile("C:\\Users\\Vincent\\Desktop\\CS3560ObjectOrientedProgramming\\Project\\Set1.json");
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println(tasks);
+
+		for (int i = 0; i < tasks.size(); ++i)
+		{
+			if (tasks.get(i) instanceof TransientTask)
+			{
+				scheduler.createTransientTask((TransientTask) tasks.get(i));
+			}
+			else if (tasks.get(i) instanceof RecursiveTask)
+			{
+				scheduler.createRecursiveTask((RecursiveTask) tasks.get(i));
+			}
+			else
+			{
+				System.out.println("Wrong type");
+			}
+
+		}
+		System.out.println("Added all tasks from the file");
 	}
 
 }
