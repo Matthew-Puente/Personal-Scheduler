@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 import java.util.regex.*;
 
@@ -33,7 +34,6 @@ public class Driver
 		}
 
 		System.out.println(tasks);
-
 
 		String input = "";
 
@@ -346,8 +346,14 @@ public class Driver
 		System.out.println("Enter the name of the transient task:");
 		name = scanner.nextLine();
 
-		System.out.println("Enter the type of the transient task:");
+		System.out.println("Enter the type of the transient task (Course, Study, Sleep, Exercise, Work, Meal, Visit, Shopping, and Appointment):");
 		type = scanner.nextLine();
+
+		while (!driver.transientTypeIsValid(type))
+		{
+			System.out.println("Incorrect type, enter type as (Course, Study, Sleep, Exercise, Work, Meal, Visit, Shopping, and Appointment):");
+			type = scanner.nextLine();
+		}
 
 		TransientTask transientTask = new TransientTask(tempStartDate, startTime, endTime, name, type);
 		// the scheduler returns true if the task was successfully created, false otherwise
@@ -453,11 +459,23 @@ public class Driver
 		System.out.println("Enter the frequency of the recursive task (D for daily, W for weekly, M for monthly):");
 		frequency = scanner.nextLine();
 
+		while (!driver.recursiveFrequencyIsValid(frequency))
+		{
+			System.out.println("Incorrect frequency, enter frequency as (D for daily, W for weekly, M for monthly):");
+			frequency = scanner.nextLine();
+		}
+
 		System.out.println("Enter the name of the recursive task:");
 		name = scanner.nextLine();
 
-		System.out.println("Enter the type of the recursive task:");
+		System.out.println("Enter the type of the recursive task (Course, Study, Sleep, Exercise, Work, and Meal):");
 		type = scanner.nextLine();
+
+		while (!driver.recursiveTypeIsValid(type))
+		{
+			System.out.println("Incorrect type, enter type as (Course, Study, Sleep, Exercise, Work, and Meal):");
+			type = scanner.nextLine();
+		}
 
 		RecursiveTask recursiveTask = new RecursiveTask(frequency, name, type, tempStartDate,tempEndDate, startTime, endTime);
 
@@ -556,6 +574,30 @@ public class Driver
 	void createAntiTask(Scheduler scheduler, Date dateToRemove, int startTime, int endTime)
 	{
 
+	}
+
+	public boolean transientTypeIsValid(String t)
+	{
+		return switch (t.toUpperCase()) {
+			case "COURSE", "STUDY", "SLEEP", "EXERCISE", "WORK", "MEAL", "VISIT", "SHOPPING", "APPOINTMENT" -> true;
+			default -> false;
+		};
+	}
+
+	public boolean recursiveTypeIsValid(String t)
+	{
+		return switch (t.toUpperCase()) {
+			case "COURSE", "STUDY", "SLEEP", "EXERCISE", "WORK", "MEAL" -> true;
+			default -> false;
+		};
+	}
+
+	public boolean recursiveFrequencyIsValid(String f)
+	{
+		return switch (f.toUpperCase()) {
+			case "D", "W", "M" -> true;
+			default -> false;
+		};
 	}
 
 }
