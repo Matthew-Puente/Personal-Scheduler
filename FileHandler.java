@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.io.FileReader;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
@@ -117,10 +118,10 @@ public class FileHandler{
 			}
 
 
-			//detecting if the current task is a Transient Task
+			//detecting if the current task is a Transient or Anti-Task
 			if(newTaskJSON.containsKey("Type")){
 				//do things for normal tasks
-
+				
 				//again casting to datatypes
 				String startDateStr = (String) String.valueOf(newTaskJSON.get("Date"));
 				Integer startYear = Integer.valueOf(startDateStr.substring(0,4));
@@ -133,14 +134,19 @@ public class FileHandler{
 
 				String taskType = (String) newTaskJSON.get("Type");
 				//end casting datatypes
-				
+				if(taskType.toUpperCase().equals("CANCELLATION"))
+				{
+					AntiTask newTask = new AntiTask(startDate,startTime,endTime);
+					tasksFromFile.add(newTask);
+					continue;
+				}
 				TransientTask newTask = new TransientTask(startDate, startTime, endTime, taskName, taskType);
 				tasksFromFile.add(newTask);
 				continue;
 
 			}
 			//detecting if the current task is an antitask
-			if(newTaskJSON.get("Type") == "Cancellation"){
+			/*if(newTaskJSON.get("Type").equals("Cancellation")){
 				//do things for normal tasks
 
 				//again casting to datatypes
@@ -155,12 +161,12 @@ public class FileHandler{
 				tasksFromFile.add(newTask);
 				continue;
 
-			}
+			}*/
 		}
 		return tasksFromFile;
 	}
-	/*
-	public void writeFile(ArrayList<Task> listOfTasks, String filepath) throws IOException
+	
+	public void writeFile(LinkedList<Task> linkedList, String filepath) throws IOException
 	{
 		//'filepath' is the absolute filepath (like C:\documents\options.txt)
 
@@ -172,33 +178,55 @@ public class FileHandler{
 		Writer fileWriter = new FileWriter(filepath, true);
 		//JSONObject fileJsonObject = new JSONObject();
 		JSONArray fileJsonArray = new JSONArray();
-		for (int i = 0; i < listOfTasks.size(); i++){
+		for (int i = 0; i < linkedList.size(); i++){
 
 			//get the start date into a String so we can check if it's double digits (as in above 9)
-			String startDateStrTemp;
+			String startDateStrTemp = Integer.toString(linkedList.get(i).getStartDate().getMonth());
+			String startDateStrTempTwo = Integer.toString(linkedList.get(i).getStartDate().getDay());
 			Integer StartDateCompiled;
-			startDateStrTemp = Integer.toString(listOfTasks.get(i).getStartDate().getMonth());
-
 			//Check if our start month has two digits in it. If it does not, pad a 0 before the month digit.
 			if(startDateStrTemp.length() == 1){
-				StartDateCompiled = Integer.valueOf(startDateStrTemp.join("", 
-				Integer.toString(listOfTasks.get(i).getStartDate().getYear()),
-				"0",
-				Integer.toString(listOfTasks.get(i).getStartDate().getMonth()), 
-				Integer.toString(listOfTasks.get(i).getStartDate().getDay())
-				));
+				if(startDateStrTempTwo.length() == 1)
+				{
+					StartDateCompiled = Integer.valueOf(startDateStrTemp.join("", 
+					Integer.toString(linkedList.get(i).getStartDate().getYear()),
+					"0",
+					Integer.toString(linkedList.get(i).getStartDate().getMonth()),"0", 
+					Integer.toString(linkedList.get(i).getStartDate().getDay())
+					));
+				}
+				else
+				{
+					StartDateCompiled = Integer.valueOf(startDateStrTemp.join("", 
+					Integer.toString(linkedList.get(i).getStartDate().getYear()),
+					"0",
+					Integer.toString(linkedList.get(i).getStartDate().getMonth()), 
+					Integer.toString(linkedList.get(i).getStartDate().getDay())
+					));
+				}
 			}
 			else{
-				StartDateCompiled = Integer.valueOf(startDateStrTemp.join("", 
-				Integer.toString(listOfTasks.get(i).getStartDate().getYear()),
-				Integer.toString(listOfTasks.get(i).getStartDate().getMonth()), 
-				Integer.toString(listOfTasks.get(i).getStartDate().getDay())
-				));
+				if(!(startDateStrTempTwo.length() == 1))
+				{
+					StartDateCompiled = Integer.valueOf(startDateStrTemp.join("", 
+							Integer.toString(linkedList.get(i).getStartDate().getYear()),"0",
+							Integer.toString(linkedList.get(i).getStartDate().getMonth()), 
+							Integer.toString(linkedList.get(i).getStartDate().getDay())
+							));
+				}
+				else
+				{
+					StartDateCompiled = Integer.valueOf(startDateStrTemp.join("", 
+							Integer.toString(linkedList.get(i).getStartDate().getYear()),"0",
+							Integer.toString(linkedList.get(i).getStartDate().getMonth()),"0", 
+							Integer.toString(linkedList.get(i).getStartDate().getDay())
+							));
+				}
 			}
 			
 			//get the start time. startTime is in minutes per day so we divide it by 60.
-			Integer startTime = Integer.valueOf(listOfTasks.get(i).getStartTime()/60);
-
+			Integer startTime = Integer.valueOf(linkedList.get(i).getStartTime()/60);
+			//int startTimeMinutes = Integer.valueOf(linkedList.get(i).getStartTime()%60);
 			//begin converting duration to time, then add it to start time to get end time.
 			//multiply duration by 60. Should be an integer now.
 			//Integer duration = (Integer) listOfTasks.get(i).get("Duration")*60;
@@ -207,12 +235,12 @@ public class FileHandler{
 
 			//make the object we will insert all our data into. This object then goes into the array at the end.
 			JSONObject fileJsonArrayObject = new JSONObject();
-			if(listOfTasks.get(i) instanceof RecursiveTask){
+			if(linkedList.get(i) instanceof RecursiveTask){
 
 
 				//Get things into the json in order (though it shouldnt matter)
 				//consider changing the variables like "startTime" as it is the same as "StartTime"
-				RecursiveTask recursiveTemp = (RecursiveTask) listOfTasks.get(i);
+				RecursiveTask recursiveTemp = (RecursiveTask) linkedList.get(i);
 				fileJsonArrayObject.put("Name", recursiveTemp.getName());
 				fileJsonArrayObject.put("Type", recursiveTemp.getType());
 				fileJsonArrayObject.put("StartDate", StartDateCompiled);
@@ -220,16 +248,52 @@ public class FileHandler{
 
 
 				//get the duration as an int, endTime-startTime divided by 60 should return it.
-				int duration = recursiveTemp.getEndTime() - startTime;
+				double duration = ((double)recursiveTemp.getEndTime() - (double)recursiveTemp.getStartTime())/60;
 				fileJsonArrayObject.put("Duration", duration);
 
 
 				//get the end date. This works the same as the start date but with getEndDate instead.
-				Integer EndDateCompiled = Integer.valueOf(startDateStrTemp.join("", 
-				Integer.toString(recursiveTemp.getEndDate().getYear()),
-				Integer.toString(recursiveTemp.getEndDate().getMonth()),
-				Integer.toString(recursiveTemp.getEndDate().getDay())
-				));
+				String endDateStringTemp = Integer.toString(recursiveTemp.getEndDate().getMonth());
+				String endDateStringTempTwo = Integer.toString(recursiveTemp.getEndDate().getDay());
+				int EndDateCompiled;
+				if(endDateStringTemp.length() == 1)
+				{
+					if(endDateStringTempTwo.length() == 1)
+					{
+						EndDateCompiled = Integer.valueOf(startDateStrTemp.join("", 
+								Integer.toString(recursiveTemp.getEndDate().getYear()),"0",
+								Integer.toString(recursiveTemp.getEndDate().getMonth()),"0",
+								Integer.toString(recursiveTemp.getEndDate().getDay())
+					));
+					}
+					else
+					{
+						EndDateCompiled = Integer.valueOf(startDateStrTemp.join("", 
+								Integer.toString(recursiveTemp.getEndDate().getYear()),"0",
+								Integer.toString(recursiveTemp.getEndDate().getMonth()),
+								Integer.toString(recursiveTemp.getEndDate().getDay())
+					));
+					}
+				}
+				else
+				{
+					if(endDateStringTempTwo.length() == 1)
+					{
+						EndDateCompiled = Integer.valueOf(startDateStrTemp.join("", 
+								Integer.toString(recursiveTemp.getEndDate().getYear()),
+								Integer.toString(recursiveTemp.getEndDate().getMonth()),"0",
+								Integer.toString(recursiveTemp.getEndDate().getDay())
+					));
+					}
+					else
+					{
+						EndDateCompiled = Integer.valueOf(startDateStrTemp.join("", 
+								Integer.toString(recursiveTemp.getEndDate().getYear()),
+								Integer.toString(recursiveTemp.getEndDate().getMonth()),
+								Integer.toString(recursiveTemp.getEndDate().getDay())
+					));
+					}
+				}
 				fileJsonArrayObject.put("EndDate", EndDateCompiled);
 
 				//check frequency and apply accordingly.
@@ -246,24 +310,24 @@ public class FileHandler{
 				fileJsonArrayObject.put("Frequency", frequency);
 				
 			}
-			if(listOfTasks.get(i) instanceof TransientTask){
-				TransientTask transientTemp = (TransientTask) listOfTasks.get(i);
+			if(linkedList.get(i) instanceof TransientTask){
+				TransientTask transientTemp = (TransientTask) linkedList.get(i);
 				fileJsonArrayObject.put("Name", transientTemp.getName());
 				fileJsonArrayObject.put("Type", transientTemp.getType());
-				fileJsonArrayObject.put("StartDate", StartDateCompiled);
+				fileJsonArrayObject.put("Date", StartDateCompiled);
 				fileJsonArrayObject.put("StartTime", startTime);
 
 				//get the duration as an int, endTime-startTime divided by 60 should return it.
-				double duration = transientTemp.getEndTime() - startTime;
+				double duration = ((double)transientTemp.getEndTime() - (double)transientTemp.getStartTime())/60;
 				fileJsonArrayObject.put("Duration", duration);
 			}
-			if(listOfTasks.get(i) instanceof AntiTask){
-				AntiTask antitaskTemp = (AntiTask) listOfTasks.get(i);
-				fileJsonArrayObject.put("StartDate", StartDateCompiled);
+			if(linkedList.get(i) instanceof AntiTask){
+				AntiTask antitaskTemp = (AntiTask) linkedList.get(i);
+				fileJsonArrayObject.put("Date", StartDateCompiled);
 				fileJsonArrayObject.put("StartTime", startTime);
-
+				fileJsonArrayObject.put("Type", "Cancellation");
 				//get the duration as an int, endTime-startTime divided by 60 should return it.
-				double duration = antitaskTemp.getEndTime() - startTime;
+				double duration = ((double)antitaskTemp.getEndTime() - (double)antitaskTemp.getStartTime())/60;
 				fileJsonArrayObject.put("Duration", duration);
 
 			}
@@ -278,5 +342,5 @@ public class FileHandler{
 		//fileJsonObject.put(fileJsonArray);
 		fileJsonArray.writeJSONString(fileWriter);
 		fileWriter.close();
-	}*/
+	}
 }

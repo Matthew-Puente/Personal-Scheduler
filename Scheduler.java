@@ -1,4 +1,3 @@
-package basePackage;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -81,7 +80,7 @@ public class Scheduler {
 		Date tempStartDate = new Date(myTask.getStartDate().getMonth(),myTask.getStartDate().getDay(),myTask.getStartDate().getYear());
 		Date tempEndDate = new Date(myTask.getEndDate().getMonth(),myTask.getEndDate().getDay(),myTask.getEndDate().getYear());
 		RecursiveTask task = new RecursiveTask(myTask.getFrequency(),myTask.getName(),myTask.getType(),tempStartDate,tempEndDate,myTask.getStartTime(),myTask.getEndTime());
-		if(!task.getType().toUpperCase().equals("COURSE") && !task.getType().toUpperCase().equals("STUDY") && !task.getType().toUpperCase().equals("SLEEP") && !task.getType().toUpperCase().equals("EXERCISE") && !task.getType().toUpperCase().equals("WORK") && !task.getType().toUpperCase().equals("MEAL"))
+		if(!task.getType().toUpperCase().equals("COURSE") && !task.getType().toUpperCase().equals("STUDY") && !task.getType().toUpperCase().equals("SLEEP") && !task.getType().toUpperCase().equals("EXERCISE") && !task.getType().toUpperCase().equals("WORK") && !task.getType().toUpperCase().equals("MEAL")&& !task.getType().toUpperCase().equals("CLASS"))
 		{
 			System.out.println("Task: "+task.getName()+ " not added because of Invalid Type");
 			return false;
@@ -104,7 +103,9 @@ public class Scheduler {
 	private boolean verifyTask(RecursiveTask task)
 	{
 		int frequency = getFrequency(task.getFrequency());
-		PriorityQueue<Date> recursiveTask = calculateDates(frequency, task.getStartDate(),task.getEndDate());
+		Date newStartDate = new Date(task.getStartDate().getMonth(),task.getStartDate().getDay(),task.getStartDate().getYear());
+		Date newEndDate = new Date(task.getEndDate().getMonth(),task.getEndDate().getDay(),task.getEndDate().getYear());
+		PriorityQueue<Date> recursiveTask = calculateDates(frequency, newStartDate,newEndDate);
 		for(int i = 0; i<recursiveTask.size();i++)
 		{
 			//System.out.println("Hello");

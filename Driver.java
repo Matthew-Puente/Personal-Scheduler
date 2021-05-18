@@ -74,6 +74,13 @@ public class Driver
 				// 6. write to a .json file
 				case '6':
 					System.out.println("Enter the file path to write:");
+					filePath = scanner.nextLine();
+				try {
+					fileHandler.writeFile(scheduler.getLinkedList(), filePath);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 					break;
 
 				// 7. end the program
@@ -606,29 +613,43 @@ public class Driver
 			System.out.println("Failed to create anti task");
 		}
 	}
-
 	public boolean transientTypeIsValid(String t)
 	{
-		return switch (t.toUpperCase()) {
-			case "COURSE", "STUDY", "SLEEP", "EXERCISE", "WORK", "MEAL", "VISIT", "SHOPPING", "APPOINTMENT" -> true;
-			default -> false;
-		};
+				switch (t.toUpperCase()) {
+				case "COURSE": return true; 
+				case "STUDY": return true; 
+				case "SLEEP": return true; 
+				case "EXERCISE": return true;  
+				case "WORK": return true; 
+				case "MEAL": return true; 
+				case "VISIT": return true;  
+				case "SHOPPING": return true; 
+				case "APPOINTMENT": return true; 
+				default: return false;
+		}
 	}
 
 	public boolean recursiveTypeIsValid(String t)
 	{
-		return switch (t.toUpperCase()) {
-			case "COURSE", "STUDY", "SLEEP", "EXERCISE", "WORK", "MEAL" -> true;
-			default -> false;
-		};
+		switch (t.toUpperCase()) {
+		case "COURSE": return true; 
+		case "STUDY": return true; 
+		case "SLEEP": return true; 
+		case "EXERCISE": return true;  
+		case "WORK": return true; 
+		case "MEAL": return true;  
+		default: return false;
+		}
 	}
 
 	public boolean recursiveFrequencyIsValid(String f)
 	{
-		return switch (f.toUpperCase()) {
-			case "D", "W", "M" -> true;
-			default -> false;
-		};
+		switch (f.toUpperCase()) {
+			case "D": return true; 
+			case "W": return true;
+			case "M": return true;
+			default: return false;
+		}
 	}
 
 	void createTasksFromFile(Scheduler scheduler, FileHandler fileHandler, String filePath)
