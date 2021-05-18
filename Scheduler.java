@@ -25,6 +25,11 @@ public class Scheduler {
 	{		// Implements a TransientTask
 		Date tempStartDate = new Date(myTask.getStartDate().getMonth(),myTask.getStartDate().getDay(),myTask.getStartDate().getYear());
 		TransientTask task = new TransientTask(tempStartDate,myTask.getStartTime(),myTask.getEndTime(),myTask.getName(),myTask.getType());
+		if(!task.getType().toUpperCase().equals("COURSE") && !task.getType().toUpperCase().equals("STUDY") && !task.getType().toUpperCase().equals("SLEEP") && !task.getType().toUpperCase().equals("EXERCISE") && !task.getType().toUpperCase().equals("WORK") && !task.getType().toUpperCase().equals("MEAL")&& !task.getType().toUpperCase().equals("VISIT")&& !task.getType().toUpperCase().equals("SHOPPING")&& !task.getType().toUpperCase().equals("APPOINTMENT"))
+		{
+			System.out.println("Task: "+task.getName()+ " not added because of Invalid Type");
+			return false;
+		}
 		boolean YN = verifyTask(task);
 		if(YN)
 		{
@@ -76,6 +81,11 @@ public class Scheduler {
 		Date tempStartDate = new Date(myTask.getStartDate().getMonth(),myTask.getStartDate().getDay(),myTask.getStartDate().getYear());
 		Date tempEndDate = new Date(myTask.getEndDate().getMonth(),myTask.getEndDate().getDay(),myTask.getEndDate().getYear());
 		RecursiveTask task = new RecursiveTask(myTask.getFrequency(),myTask.getName(),myTask.getType(),tempStartDate,tempEndDate,myTask.getStartTime(),myTask.getEndTime());
+		if(!task.getType().toUpperCase().equals("COURSE") && !task.getType().toUpperCase().equals("STUDY") && !task.getType().toUpperCase().equals("SLEEP") && !task.getType().toUpperCase().equals("EXERCISE") && !task.getType().toUpperCase().equals("WORK") && !task.getType().toUpperCase().equals("MEAL"))
+		{
+			System.out.println("Task: "+task.getName()+ " not added because of Invalid Type");
+			return false;
+		}
 		if(verifyTask(task))
 		{
 			taskList.add(task);
