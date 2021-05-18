@@ -175,7 +175,7 @@ public class FileHandler{
 		//delimiter is <,> with the arrow/less then/greater than signs
 		//recursive should be saved in this order:
 		//int startMonth, int startDay, int endMonth, int endDay, String frequency, String name, String type, int startTime, int endTime
-		Writer fileWriter = new FileWriter(filepath, true);
+		Writer fileWriter = new FileWriter(filepath, false);
 		//JSONObject fileJsonObject = new JSONObject();
 		JSONArray fileJsonArray = new JSONArray();
 		for (int i = 0; i < linkedList.size(); i++){
