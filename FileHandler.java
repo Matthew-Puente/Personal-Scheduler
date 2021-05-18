@@ -59,7 +59,7 @@ public class FileHandler{
 			Double durationLong = (Double) newTaskJSON.get("Duration")*60;
 			Integer duration = (Integer) durationLong.intValue();
 			//add start time * 60 to duration as endTime is in minutes in a day (1440 minutes in a day)
-			Integer endTime = (Integer) startTime*60 + duration;
+			Integer endTime = (Integer) startTime + duration;
 
 			//common parameters end here
 
@@ -159,6 +159,7 @@ public class FileHandler{
 		}
 		return tasksFromFile;
 	}
+	/*
 	public void writeFile(ArrayList<Task> listOfTasks, String filepath) throws IOException
 	{
 		//'filepath' is the absolute filepath (like C:\documents\options.txt)
@@ -277,5 +278,5 @@ public class FileHandler{
 		//fileJsonObject.put(fileJsonArray);
 		fileJsonArray.writeJSONString(fileWriter);
 		fileWriter.close();
-	}
+	}*/
 }
